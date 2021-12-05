@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "308169116147",
+    "project_id": "evsolution-79921",
+    "storage_bucket": "evsolution-79921.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308169116147:android:919ccc6d0c49da70586a86",
+        "android_client_info": {
+          "package_name": "com.evsolution.smartcharging.evsolution"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "308169116147-51c0dkgeqc0h9qqhjj4pi6f4m9133buj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.evsolution.smartcharging.evsolution",
+            "certificate_hash": "2ea65ce68e98408f8503c287a2fef02cb1ea6cd1"
+          }
+        },
+        {
+          "client_id": "308169116147-9mf6big60bb914liq4ppij3tkofuecu1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcB8eIUspEPZlkRZ6EIw02tlfCyPSoUxQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "308169116147-9mf6big60bb914liq4ppij3tkofuecu1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "308169116147-1d3ldhcnj6885es62tcbk111rhbtj4jb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.evsolution.smartcharging.evsolution"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
