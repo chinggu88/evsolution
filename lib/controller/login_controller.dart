@@ -5,10 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:kakao_flutter_sdk/user.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class Logincontroller extends GetxController {
   static Logincontroller get to => Get.find();
@@ -141,6 +143,22 @@ class Logincontroller extends GetxController {
     }
   }
 
+  //apple 로그인
+  Future<UserCredential> signInWithApple() async {
+    final appleCredential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
+
+    final oauthCredential = OAuthProvider("apple.com").credential(
+      idToken: appleCredential.identityToken,
+      accessToken: appleCredential.authorizationCode,
+    );
+    return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+  }
+  
     //최초로그인정보 저장 휴대폰 내부 저장소
   setlogininfo(String id, String kind, String token) async {
     await storage.write(key: "id", value: id); //로그인아이디
@@ -171,6 +189,7 @@ class Logincontroller extends GetxController {
         if (info.length == 1) {
           Statecontroller.to.loginType(info[0].kind);
           Statecontroller.to.loginId(info[0].id);
+          await Geolocator.requestPermission();
           Get.offNamed('/root');
         }
       }
@@ -192,6 +211,7 @@ class Logincontroller extends GetxController {
       if (info.length == 1) {
         Statecontroller.to.loginType(info[0].kind);
         Statecontroller.to.loginId(info[0].id);
+        await Geolocator.requestPermission();
         Get.offNamed('/root');
       }
     }

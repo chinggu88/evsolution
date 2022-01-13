@@ -17,7 +17,7 @@ class Root extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx((){
       return Scaffold(
-          appBar: setAppbar(),
+          // appBar: setAppbar(),
           body: setbody(),
           bottomNavigationBar:setNavigator(),
       );
