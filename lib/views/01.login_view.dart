@@ -12,12 +12,12 @@ class Login extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              height: Get.size.height * 0.204,
+              height: Get.size.height * 0.128,
             ),
             Container(
-              height: Get.size.height * 0.17,
-              width: Get.size.width * 0.30,
-              child: SvgPicture.asset('assets/image/login/group_325.svg'),
+              height: Get.size.height * 0.257,
+              width: Get.size.width * 0.377,
+              child: Image.asset('assets/image/login/loginlogo.png'),
             ),
             Container(
               height: Get.size.height * 0.02,
@@ -140,12 +140,39 @@ class Login extends StatelessWidget {
                   )),
             ),
             Container(
-              height: Get.size.height * 0.03,
+              height: Get.size.height * 0.019,
             ),
-            FlatButton(
-              color: Colors.grey.withOpacity(0.3),
-              onPressed: Logincontroller.to.signInWithApple,
-              child: Text("Apple Login"),
+            GestureDetector(
+              onTap: Logincontroller.to.signInWithApple,
+              child: Container(
+                  width: Get.size.width * 0.733,
+                  height: Get.size.height * 0.062,
+                  decoration: BoxDecoration(
+                    color: Color(0xff040404),
+                    borderRadius: BorderRadius.circular(61),
+                  ),
+                  child: Stack(
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        width: Get.size.height * 0.062,
+                        height: Get.size.height * 0.062,
+                        child: SvgPicture.asset('assets/image/login/apple.svg'),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        width: (Get.size.width * 0.733),
+                        height: Get.size.height * 0.062,
+                        child: Text(
+                          'Apple로 로그인',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'AppleSDGothicNeoR00',
+                          ),
+                        ),
+                      )
+                    ],
+                  )),
             ),
             TextButton(
               onPressed: () async {

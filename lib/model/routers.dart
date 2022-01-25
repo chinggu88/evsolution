@@ -1,11 +1,37 @@
-class features {
+class routers {
+  String? type;
+  List<Features>? features;
+
+  routers({this.type, this.features});
+
+  routers.fromJson(Map<String, dynamic> json) {
+    type = json['type'];
+    if (json['features'] != null) {
+      features = <Features>[];
+      json['features'].forEach((v) {
+        features!.add(new Features.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['type'] = this.type;
+    if (this.features != null) {
+      data['features'] = this.features!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Features {
   String? type;
   Geometry? geometry;
   Properties? properties;
 
-  features({this.type, this.geometry, this.properties});
+  Features({this.type, this.geometry, this.properties});
 
-  features.fromJson(Map<String, dynamic> json) {
+  Features.fromJson(Map<String, dynamic> json) {
     type = json['type'];
     geometry = json['geometry'] != null
         ? new Geometry.fromJson(json['geometry'])
@@ -30,13 +56,13 @@ class features {
 
 class Geometry {
   String? type;
-  List<double>? coordinates;
-
+  dynamic? coordinates;
+  //List<List<double>> , List<double>
   Geometry({this.type, this.coordinates});
 
   Geometry.fromJson(Map<String, dynamic> json) {
     type = json['type'];
-    coordinates = json['coordinates'].cast<double>();
+    coordinates = json['coordinates'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -46,29 +72,7 @@ class Geometry {
     return data;
   }
 }
-class GeometryList {
-	String? type;
-	List<List<double>>? coordinates;
 
-	GeometryList({this.type, this.coordinates});
-
-	GeometryList.fromJson(Map<String, dynamic> json) {
-		type = json['type'];
-		if (json['coordinates'] != null) {
-			coordinates = <List<double>>[];
-			json['coordinates'].forEach((v) { coordinates!.add(v); });
-		}
-	}
-
-	// Map<String, dynamic> toJson() {
-	// 	final Map<String, dynamic> data = new Map<String, dynamic>();
-	// 	data['type'] = this.type;
-	// 	if (this.coordinates != null) {
-  //     data['coordinates'] = this.coordinates!.map((v) => v.toJson()).toList();
-  //   }
-	// 	return data;
-	// }
-}
 class Properties {
   int? totalDistance;
   int? totalTime;
@@ -81,6 +85,11 @@ class Properties {
   String? nextRoadName;
   int? turnType;
   String? pointType;
+  int? lineIndex;
+  int? distance;
+  int? time;
+  int? roadType;
+  int? facilityType;
 
   Properties(
       {this.totalDistance,
@@ -93,7 +102,12 @@ class Properties {
       this.description,
       this.nextRoadName,
       this.turnType,
-      this.pointType});
+      this.pointType,
+      this.lineIndex,
+      this.distance,
+      this.time,
+      this.roadType,
+      this.facilityType});
 
   Properties.fromJson(Map<String, dynamic> json) {
     totalDistance = json['totalDistance'];
@@ -107,6 +121,11 @@ class Properties {
     nextRoadName = json['nextRoadName'];
     turnType = json['turnType'];
     pointType = json['pointType'];
+    lineIndex = json['lineIndex'];
+    distance = json['distance'];
+    time = json['time'];
+    roadType = json['roadType'];
+    facilityType = json['facilityType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -122,6 +141,11 @@ class Properties {
     data['nextRoadName'] = this.nextRoadName;
     data['turnType'] = this.turnType;
     data['pointType'] = this.pointType;
+    data['lineIndex'] = this.lineIndex;
+    data['distance'] = this.distance;
+    data['time'] = this.time;
+    data['roadType'] = this.roadType;
+    data['facilityType'] = this.facilityType;
     return data;
   }
 }
