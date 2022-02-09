@@ -12,11 +12,22 @@ class Home extends StatelessWidget {
           children: [
             SizedBox(height: Get.size.height * 0.04),
             Container(
-              height: Get.size.height * 0.051,
+              height: Get.size.height * 0.08,
               child: Row(
                 children: [
-                  SvgPicture.asset('assets/image/home/home_logo.svg'),
-                  Text('마이차져'),
+                  // SvgPicture.asset('assets/image/home/home_logo.svg'),
+                  Image.asset('assets/image/home/group_325.png'),
+                  Text('마이차져',
+                      style: TextStyle(
+                        fontFamily: 'Pretendard',
+                        color: Color(0xff000000),
+                        fontSize: 25,
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.normal,
+                      )),
+                  SizedBox(
+                    width: Get.size.width * 0.5,
+                  ),
                   Container(
                     width: Get.size.width * 0.061,
                     height: Get.size.height * 0.034,
@@ -28,12 +39,11 @@ class Home extends StatelessWidget {
             ),
             SizedBox(height: Get.size.height * 0.026),
             Container(
+              height: Get.size.height * 0.097,
               child: Row(
                 children: [
                   SizedBox(width: Get.size.width * 0.064),
                   Container(
-                    width: Get.size.width * 0.172,
-                    height: Get.size.height * 0.097,
                     child: Image.asset('assets/image/home/testimge.png'),
                   ),
                   SizedBox(width: Get.size.width * 0.051),
@@ -42,31 +52,41 @@ class Home extends StatelessWidget {
                       height: Get.size.height * 0.097,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("반갑습니다",
-                              style: TextStyle(
-                                fontFamily: 'Pretendard',
-                                color: Color(0xff858585),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                                fontStyle: FontStyle.normal,
-                              )),
-                          Text("박세라님",
-                              style: TextStyle(
-                                fontFamily: 'Pretendard',
-                                color: Color(0xff000000),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                fontStyle: FontStyle.normal,
-                              )),
-                          Text("2020 메르세데츠벤츠 A클래스(4세대)",
-                              style: TextStyle(
-                                fontFamily: 'Pretendard',
-                                color: Color(0xff858585),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                fontStyle: FontStyle.normal,
-                              ))
+                          Container(
+                            height: Get.size.height * 0.022,
+                            child: Text("반갑습니다",
+                                style: TextStyle(
+                                  fontFamily: 'Pretendard',
+                                  color: Color(0xff858585),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                  fontStyle: FontStyle.normal,
+                                )),
+                          ),
+                          Container(
+                            height: Get.size.height * 0.03,
+                            child: Text("박세라님",
+                                style: TextStyle(
+                                  fontFamily: 'Pretendard',
+                                  color: Color(0xff000000),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FontStyle.normal,
+                                )),
+                          ),
+                          Container(
+                            height: Get.size.height * 0.022,
+                            child: Text("2020 메르세데츠벤츠 A클래스(4세대)",
+                                style: TextStyle(
+                                  fontFamily: 'Pretendard',
+                                  color: Color(0xff858585),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FontStyle.normal,
+                                )),
+                          )
                         ],
                       )),
                 ],
@@ -168,8 +188,7 @@ class Home extends StatelessWidget {
                 SizedBox(width: Get.size.width * 0.05),
                 Expanded(
                     child: Container(
-                  width: Get.size.width * 0.397,
-                  height: Get.size.height * 0.191,
+                  height: Get.size.height * 0.2,
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: 4,
@@ -177,6 +196,8 @@ class Home extends StatelessWidget {
                         return Row(
                           children: [
                             new Container(
+                              width: Get.size.width * 0.397,
+                              height: Get.size.height * 0.191,
                               decoration: new BoxDecoration(
                                 color: Color(0xffffffff),
                                 borderRadius: BorderRadius.circular(8),

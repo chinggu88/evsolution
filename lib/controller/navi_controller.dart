@@ -32,7 +32,6 @@ class Navicontroller extends GetxController {
 
   void oninit() async {
     // await storage.delete(key: 'searchlist');
-
     getpostion();
     listsearch();
   }
@@ -102,10 +101,11 @@ class Navicontroller extends GetxController {
           return DoroJuso.fromJson(json);
         }).toList();
         info.forEach((element) {
-          print(element.admCd);
           jusolist.add(element);
         });
       }
+      //최근검색어저장
+
       naviindex(1);
     });
   }
@@ -139,7 +139,10 @@ class Navicontroller extends GetxController {
       info = Geocoding.fromJson(response.data["coordinateInfo"]);
     }
 
-    // String juso = Navicontroller.to.jusolist[i].upperAddrName.toString() + Navicontroller.to.jusolist[i].middleAddrName.toString() + Navicontroller.to.jusolist[i].lowerAddrName.toString();
+    // String juso = Navicontroller.to.jusolist[i].upperAddrName.toString() +
+    //     Navicontroller.to.jusolist[i].middleAddrName.toString() +
+    //     Navicontroller.to.jusolist[i].lowerAddrName.toString();
+    // List<String> temp = Navicontroller.to.searchlist[i].split('/');
 
     double lat = double.parse(info!.lat.toString());
     double lon = double.parse(info.lon.toString());
@@ -160,8 +163,10 @@ class Navicontroller extends GetxController {
       markerId: MarkerId('end'),
       position: LatLng(lat, lon),
     ));
-    //검색리스트 추가
+
+    //최근검색추가
     innersaveresultjuso(Navicontroller.to.jusolist[i], lat, lon);
+
     //리스트초기화
     jusolist.clear();
     naviindex(2);
@@ -179,6 +184,7 @@ class Navicontroller extends GetxController {
   }
 
   void searchStarttoEnd(Completer<GoogleMapController> mcontroller) async {
+    List<MyProperties> mp = [];
     double startx = 0.0, starty = 0.0, endx = 0.0, endy = 0.0;
     naviMarker.forEach((e) {
       if (e.markerId == MarkerId('start')) {
@@ -200,11 +206,11 @@ class Navicontroller extends GetxController {
       "endX": endx,
       "endY": endy,
       "reqCoordType": "WGS84GEO",
-      "resCoordType": "EPSG3857",
+      "resCoordType": "WGS84GEO",
       "searchOption": '0',
       "trafficInfo": 'Y'
     };
-
+    print(prams);
     var response = await Dio()
         .get('https://apis.openapi.sk.com/tmap/routes', queryParameters: prams);
 
@@ -215,10 +221,106 @@ class Navicontroller extends GetxController {
       }).toList();
     }
     temp.forEach((e) {
-      print(e.geometry!.coordinates.toString());
+      List<LatLng> coorslist = [];
+      String temp = e.geometry!.coordinates.toString().replaceAll("[", "");
+      temp = temp.replaceAll("]", "");
+      var templist = temp.split(",");
 
-      // print(e.properties.roadType.toString());
+      for (int i = 0; i <= templist.length - 2; i += 2) {
+        // for (int i = 0; i < templist.length; i++) {
+        coorslist.add(LatLng(double.parse(templist[i + 1].toString()),
+            double.parse(templist[i].toString())));
+        // i++;
+      }
+      e.properties!.totalDistance.toString();
+
+      mp.add(MyProperties(
+          totalDistance: e.properties!.totalDistance,
+          totalTime: e.properties!.totalTime,
+          totalFare: e.properties!.totalFare,
+          taxiFare: e.properties!.taxiFare,
+          index: e.properties!.index,
+          pointIndex: e.properties!.pointIndex,
+          name: e.properties!.name,
+          description: e.properties!.description,
+          nextRoadName: e.properties!.nextRoadName,
+          turnType: e.properties!.turnType,
+          pointType: e.properties!.pointType,
+          lineIndex: e.properties!.lineIndex,
+          distance: e.properties!.distance,
+          time: e.properties!.time,
+          roadType: e.properties!.roadType,
+          facilityType: e.properties!.facilityType,
+          coordinates: coorslist));
     });
+    //경로그리기
+    // - 0: 고속도로
+    // - 1: 자동차전용
+    // - 2: 국도
+    // - 3: 국가지원 지방도
+    // - 4: 지방도
+    // - 5: 주요도로1(일반도로 1중 6,5차로)
+    // - 6: 주요도로2(일반도로 1 중 4,3 차로)
+    // - 7: 주요도로3(일반도로 1 중 2차로)
+    // - 8: 기타도로1(일반도로 1 중 1차로)
+    // - 9: 기타도로2(이면도로)
+    // - 10: 페리항로
+    // - 11: 단지내도로(아파트단지내 도로)
+    // - 12: 단지 내 도로(시장내 도로)
+    // - 16: 일반도로
+    // - 20: 번화가링크
+    int index = 0;
+    for (var v in mp) {
+      Color color = Colors.red;
+      List<LatLng> points = [];
+      v.coordinates?.forEach((e) {
+        points.add(LatLng(e.latitude, e.longitude));
+      });
+
+      if (v.roadType == 0) {
+        color = Colors.red;
+      } else if (v.roadType == 16) {
+        color = Colors.green;
+      } else {
+        color = Colors.blue;
+      }
+
+      routerlist.add(Polyline(
+          polylineId: PolylineId(index.toString()),
+          points: points,
+          color: color,
+          width: 5));
+      index++;
+    }
+
+    //bound설정
+    double swx = 0.0, swy = 0.0, nex = 0.0, ney = 0.0;
+    startx < endx ? {swx = startx, nex = endx} : {swx = endx, nex = startx};
+    starty < endy ? {swy = starty, ney = endy} : {swy = endy, ney = endy};
+    LatLngBounds bound =
+        LatLngBounds(southwest: LatLng(swy, swx), northeast: LatLng(ney, nex));
+    final cont = await mcontroller.future;
+    cont.animateCamera(CameraUpdate.newLatLngBounds(bound, 100));
+
+    // routerlist.add(Polyline(
+    //   polylineId: PolylineId('1'),
+    //   points: points_0,
+    //   color: Colors.red,
+    // ));
+    // routerlist.add(Polyline(
+    //   polylineId: PolylineId('2'),
+    //   points: points_1,
+    //   color: Colors.blue,
+    // ));
+    // routerlist.add(Polyline(
+    //   polylineId: PolylineId('3'),
+    //   points: points_2,
+    //   color: Colors.green,
+    // ));
+    // print(routerlist.length);
+    // routerlist.forEach((e) {
+    //   print("${e.points} to ${e.color}");
+    // });
     // if (response.statusCode == 200) {
     // List<features> info =(response.data["features"]).map<features>((json) {
     //     return features.fromJson(json);
@@ -266,20 +368,41 @@ class Navicontroller extends GetxController {
     //       color:Colors.red,
     //     ));
 
-    //     //bound설정
-    //     double swx=0.0,swy=0.0,nex=0.0,ney=0.0;
-    //     startx < endx ? {swx =startx,nex =endx} : {swx =endx,nex =startx};
-    //     starty < endy ? {swy =starty,ney =endy} : {swy =endy,ney =endy};
-    //     LatLngBounds bound = LatLngBounds(southwest: LatLng(swy,swx), northeast: LatLng(ney,nex));
-    //     print(bound);
-    //     final cont = await mcontroller.future;
-    //     cont.animateCamera(CameraUpdate.newLatLngBounds(bound, 100));
-
     // }
   }
 
+  //검색결과 마커셋팅
+  clicktosearchlist(Completer<GoogleMapController> mcontroller,
+      SheetController sc, int i) async {
+    List<String> temp = Navicontroller.to.searchlist[i].split('/');
+
+    double lat = double.parse(temp[2]);
+    double lon = double.parse(temp[3]);
+
+    if (!mcontroller.isCompleted) return;
+    final cont = await mcontroller.future;
+    cont.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(lat, lon),
+        zoom: 14.0,
+      ),
+    ));
+    //검색창축소
+    sc.snapToExtent(0.3);
+    //마커추가
+    naviMarker.add(Marker(
+      markerId: MarkerId('end'),
+      position: LatLng(lat, lon),
+    ));
+
+    //리스트초기화
+    jusolist.clear();
+    naviindex(2);
+  }
+
+  //검색결과 셋팅
   void listsearch() async {
-    print(await storage.containsKey(key: 'searchlist'));
     if (await storage.containsKey(key: 'searchlist')) {
       String? searchtext = await storage.read(key: 'searchlist');
       List<dynamic> setsearchlist = searchtext.toString().split(',');
@@ -287,7 +410,6 @@ class Navicontroller extends GetxController {
         Navicontroller.to.searchlist.add(element);
       });
     }
-    print(Navicontroller.to.searchlist.length);
   }
 
   //검색결과 내부저장
@@ -305,13 +427,22 @@ class Navicontroller extends GetxController {
       searchresult = await storage.read(key: 'searchlist');
       templist.addAll(searchresult.toString().split(','));
     }
-
+    //중복아이템 삭제
+    for (int i = 1; i < templist.length; i++) {
+      var temp = templist[i].toString().replaceAll('[', '');
+      temp = temp.replaceAll(']', '');
+      if (templist[0].toString().replaceAll(" ", "") ==
+          temp.toString().replaceAll(" ", "")) {
+        templist.removeAt(i);
+      }
+    }
+    //10개이상이면 마지막목록 삭제
     while (templist.length > 10) {
       templist.removeAt(templist.length - 1);
     }
 
     var temp = templist.toString().replaceAll('[', '');
-    temp = temp.replaceAll('[', '');
+    temp = temp.replaceAll(']', '');
 
     await storage.write(
       key: 'searchlist',

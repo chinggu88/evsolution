@@ -1,3 +1,5 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class routers {
   String? type;
   List<Features>? features;
@@ -62,13 +64,14 @@ class Geometry {
 
   Geometry.fromJson(Map<String, dynamic> json) {
     type = json['type'];
-    coordinates = json['coordinates'].toString();
+    coordinates = json['coordinates'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['type'] = this.type;
     data['coordinates'] = this.coordinates;
+
     return data;
   }
 }
@@ -146,6 +149,86 @@ class Properties {
     data['time'] = this.time;
     data['roadType'] = this.roadType;
     data['facilityType'] = this.facilityType;
+    return data;
+  }
+}
+
+class MyProperties {
+  int? totalDistance;
+  int? totalTime;
+  int? totalFare;
+  int? taxiFare;
+  int? index;
+  int? pointIndex;
+  String? name;
+  String? description;
+  String? nextRoadName;
+  int? turnType;
+  String? pointType;
+  int? lineIndex;
+  int? distance;
+  int? time;
+  int? roadType;
+  int? facilityType;
+  List<LatLng>? coordinates;
+  MyProperties(
+      {this.totalDistance,
+      this.totalTime,
+      this.totalFare,
+      this.taxiFare,
+      this.index,
+      this.pointIndex,
+      this.name,
+      this.description,
+      this.nextRoadName,
+      this.turnType,
+      this.pointType,
+      this.lineIndex,
+      this.distance,
+      this.time,
+      this.roadType,
+      this.facilityType,
+      this.coordinates});
+
+  MyProperties.fromJson(Map<String, dynamic> json) {
+    totalDistance = json['totalDistance'];
+    totalTime = json['totalTime'];
+    totalFare = json['totalFare'];
+    taxiFare = json['taxiFare'];
+    index = json['index'];
+    pointIndex = json['pointIndex'];
+    name = json['name'];
+    description = json['description'];
+    nextRoadName = json['nextRoadName'];
+    turnType = json['turnType'];
+    pointType = json['pointType'];
+    lineIndex = json['lineIndex'];
+    distance = json['distance'];
+    time = json['time'];
+    roadType = json['roadType'];
+    facilityType = json['facilityType'];
+    coordinates = json['coordinates'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['totalDistance'] = this.totalDistance;
+    data['totalTime'] = this.totalTime;
+    data['totalFare'] = this.totalFare;
+    data['taxiFare'] = this.taxiFare;
+    data['index'] = this.index;
+    data['pointIndex'] = this.pointIndex;
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['nextRoadName'] = this.nextRoadName;
+    data['turnType'] = this.turnType;
+    data['pointType'] = this.pointType;
+    data['lineIndex'] = this.lineIndex;
+    data['distance'] = this.distance;
+    data['time'] = this.time;
+    data['roadType'] = this.roadType;
+    data['facilityType'] = this.facilityType;
+    data['coordinates'] = this.coordinates;
     return data;
   }
 }
