@@ -21,14 +21,34 @@ class map extends StatelessWidget {
             zoom: 14.4746,
           ),
           onMapCreated: (GoogleMapController controller) {
-              gcontroller.complete(controller);
-            
+            gcontroller.complete(controller);
           },
-          onCameraIdle: ()=>Mapcontroller.to.onCameraIdle(gcontroller),
+          onCameraIdle: () => Mapcontroller.to.onCameraIdle(gcontroller),
           markers: Mapcontroller.to.evMarker.value,
           onTap: (LatLng pos) {
             Mapcontroller.to.minsize(0.0);
           },
+        ),
+        Positioned(
+          left: Get.size.width * 0.29,
+          top: Get.size.height * 0.806,
+          child: Container(
+            width: Get.size.width * 0.442,
+            height: Get.size.height * 0.062,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(46),
+            ),
+            child: Text(
+              '주변 충전소 ${Mapcontroller.to.evMarker.length}개',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontFamily: 'Pre-Regular',
+              ),
+            ),
+          ),
         ),
         SlidingUpPanel(
             minHeight: Mapcontroller.to.minsize.value,

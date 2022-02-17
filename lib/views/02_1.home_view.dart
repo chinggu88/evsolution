@@ -2,6 +2,7 @@ import 'package:evsolution/controller/root_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'dart:ui' as ui;
 
 class Home extends StatelessWidget {
   @override
@@ -19,6 +20,9 @@ class Home extends StatelessWidget {
                   Image.asset('assets/image/home/group_325.png'),
                   Text('마이차져',
                       style: TextStyle(
+                        // foreground: Paint()
+                        //   ..shader = ui.Gradient.linear(const Offset(0, 20),
+                        //       Offset(150, 20), [Colors.red, Colors.yellow]),
                         fontFamily: 'Pretendard',
                         color: Color(0xff000000),
                         fontSize: 25,
@@ -58,7 +62,7 @@ class Home extends StatelessWidget {
                             height: Get.size.height * 0.022,
                             child: Text("반갑습니다",
                                 style: TextStyle(
-                                  fontFamily: 'Pretendard',
+                                  fontFamily: 'Pre-Light',
                                   color: Color(0xff858585),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w300,
@@ -69,7 +73,7 @@ class Home extends StatelessWidget {
                             height: Get.size.height * 0.03,
                             child: Text("박세라님",
                                 style: TextStyle(
-                                  fontFamily: 'Pretendard',
+                                  fontFamily: 'Pre-Medium',
                                   color: Color(0xff000000),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -80,7 +84,7 @@ class Home extends StatelessWidget {
                             height: Get.size.height * 0.022,
                             child: Text("2020 메르세데츠벤츠 A클래스(4세대)",
                                 style: TextStyle(
-                                  fontFamily: 'Pretendard',
+                                  fontFamily: 'Pre-Medium',
                                   color: Color(0xff858585),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
@@ -119,7 +123,7 @@ class Home extends StatelessWidget {
                   SizedBox(width: Get.size.width * 0.05),
                   new Text("내 주변 충전소 찾기",
                       style: TextStyle(
-                        fontFamily: 'Pretendard',
+                        fontFamily: 'Pre-Medium',
                         color: Color(0xffffffff),
                         fontSize: 22,
                         fontWeight: FontWeight.w500,
@@ -155,7 +159,7 @@ class Home extends StatelessWidget {
                   SizedBox(width: Get.size.width * 0.05),
                   new Text("경로상 충전소 찾기",
                       style: TextStyle(
-                        fontFamily: 'Pretendard',
+                        fontFamily: 'Pre-Medium',
                         color: Color(0xffffffff),
                         fontSize: 22,
                         fontWeight: FontWeight.w500,
