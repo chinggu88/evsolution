@@ -7,6 +7,7 @@ import 'package:evsolution/controller/stats_controller.dart';
 import 'package:evsolution/model/stationinfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -25,7 +26,9 @@ class Mapcontroller extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    evinfo['lat'] = 0.0;
+     //현제위치
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      currentPostion(LatLng(position.latitude, position.longitude));
   }
 
   @override

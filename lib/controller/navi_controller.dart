@@ -22,8 +22,10 @@ class Navicontroller extends GetxController {
   var dio = Dio(BaseOptions(baseUrl: Statecontroller.to.serverUrl.value));
 
   RxString starttext = ''.obs;
+  RxString endtext = '도착지'.obs;
   final currentPostion = LatLng(37.5646279797785, 126.97756750354343).obs;
-  RxList<DoroJuso> jusolist = <DoroJuso>[].obs;
+  RxList<DoroJuso> jusoliststart = <DoroJuso>[].obs;
+  RxList<DoroJuso> jusolistend = <DoroJuso>[].obs;
   RxSet<Marker> naviMarker = <Marker>{}.obs;
   final naviindex = 0.obs;
   RxSet<Polyline> routerlist = <Polyline>{}.obs;
@@ -39,7 +41,8 @@ class Navicontroller extends GetxController {
   void onclose() {
     EasyDebounce.cancel('jusosearch');
     Navicontroller.to.naviindex(0);
-    Navicontroller.to.jusolist.clear();
+    Navicontroller.to.jusoliststart.clear();
+    Navicontroller.to.jusolistend.clear();
     Navicontroller.to.searchlist.clear();
     Navicontroller.to.routerlist.clear();
     Navicontroller.to.naviMarker.clear();
@@ -48,11 +51,17 @@ class Navicontroller extends GetxController {
   //현제위치 가져져와서 표시하기
   void getpostion() async {
     //현제위치
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    //현제위치
+    currentPostion(LatLng(position.latitude, position.longitude));
+    //마커추가
+    Navicontroller.to.naviMarker.add(Marker(
+      markerId: MarkerId('start'),
+      position: LatLng(position.latitude, position.longitude),
+    ));
 
     //주소추출
-    jusolist.clear();
+    jusoliststart.clear();
     var prams = {
       'version': '1',
       'format': 'json',
@@ -81,9 +90,10 @@ class Navicontroller extends GetxController {
   }
 
   //주소검색
-  void getjuso(String text) {
+  void getjuso(String text,String kindvalue) {
     EasyDebounce.debounce('jusosearch', Duration(milliseconds: 200), () async {
-      jusolist.clear();
+      
+      
       var prams = {
         'confmKey': 'U01TX0FVVEgyMDIxMTIyMDAxMDk1NjExMjA0ODQ=',
         'currentPage': '1',
@@ -100,13 +110,24 @@ class Navicontroller extends GetxController {
             (response.data["results"]["juso"]).map<DoroJuso>((json) {
           return DoroJuso.fromJson(json);
         }).toList();
-        info.forEach((element) {
-          jusolist.add(element);
-        });
-      }
-      //최근검색어저장
 
-      naviindex(1);
+        if(kindvalue == 'start'){
+          jusoliststart.clear();  
+          info.forEach((element) {
+            jusoliststart.add(element);
+          });
+          naviindex(1);
+        }else{
+          jusolistend.clear();  
+          info.forEach((element) {
+            jusolistend.add(element);
+          });
+          naviindex(2);
+        }
+        
+      }
+      
+      
     });
   }
 
@@ -373,7 +394,7 @@ class Navicontroller extends GetxController {
 
   //검색결과 마커셋팅
   clicktosearchlist(Completer<GoogleMapController> mcontroller,
-      SheetController sc, int i) async {
+      SheetController sc, int i,String kindvalue) async {
     List<String> temp = Navicontroller.to.searchlist[i].split('/');
 
     double lat = double.parse(temp[2]);
@@ -390,15 +411,27 @@ class Navicontroller extends GetxController {
     ));
     //검색창축소
     sc.snapToExtent(0.3);
-    //마커추가
-    naviMarker.add(Marker(
-      markerId: MarkerId('end'),
-      position: LatLng(lat, lon),
-    ));
+    if(kindvalue =='start'){
+      //마커추가
+      naviMarker.add(Marker(
+        markerId: MarkerId('end'),
+        position: LatLng(lat, lon),
+      ));
 
-    //리스트초기화
-    jusolist.clear();
-    naviindex(2);
+      //리스트초기화
+      jusoliststart.clear();
+    }else{
+      //마커추가
+      naviMarker.add(Marker(
+        markerId: MarkerId('end'),
+        position: LatLng(lat, lon),
+      ));
+
+      //리스트초기화
+      jusolistend.clear();
+    }
+    
+    naviindex(3);
   }
 
   //검색결과 셋팅

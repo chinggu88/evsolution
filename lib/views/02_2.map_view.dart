@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:evsolution/controller/map_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -20,8 +21,10 @@ class map extends StatelessWidget {
             target: Mapcontroller.to.currentPostion.value,
             zoom: 14.4746,
           ),
-          onMapCreated: (GoogleMapController controller) {
+          onMapCreated: (GoogleMapController controller) async {
             gcontroller.complete(controller);
+            
+            
           },
           onCameraIdle: () => Mapcontroller.to.onCameraIdle(gcontroller),
           markers: Mapcontroller.to.evMarker.value,
