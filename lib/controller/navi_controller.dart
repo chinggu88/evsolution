@@ -30,7 +30,8 @@ class Navicontroller extends GetxController {
   final naviindex = 0.obs;
   RxSet<Polyline> routerlist = <Polyline>{}.obs;
   final storage = new FlutterSecureStorage();
-  RxList<String> searchlist = <String>[].obs;
+  RxList<String> searchliststart = <String>[].obs;
+  RxList<String> searchlistend = <String>[].obs;
 
   void oninit() async {
     // await storage.delete(key: 'searchlist');
@@ -40,10 +41,11 @@ class Navicontroller extends GetxController {
 
   void onclose() {
     EasyDebounce.cancel('jusosearch');
-    Navicontroller.to.naviindex(0);
+    Navicontroller.to.naviindex(1);
     Navicontroller.to.jusoliststart.clear();
     Navicontroller.to.jusolistend.clear();
-    Navicontroller.to.searchlist.clear();
+    Navicontroller.to.searchliststart.clear();
+    Navicontroller.to.searchlistend.clear();
     Navicontroller.to.routerlist.clear();
     Navicontroller.to.naviMarker.clear();
   }
@@ -116,13 +118,13 @@ class Navicontroller extends GetxController {
           info.forEach((element) {
             jusoliststart.add(element);
           });
-          naviindex(1);
+          naviindex(2);
         }else{
           jusolistend.clear();  
           info.forEach((element) {
             jusolistend.add(element);
           });
-          naviindex(2);
+          naviindex(3);
         }
         
       }
@@ -133,10 +135,11 @@ class Navicontroller extends GetxController {
 
   //주소위치로 이동
   void clicktojuso(Completer<GoogleMapController> mcontroller,
-      SheetController sc, int i, BuildContext context) async {
+      SheetController sc, int i, BuildContext context,String kind) async {
     FocusScope.of(context).unfocus();
     EasyDebounce.cancel('jusosearch');
-    //주소xy좌표구하기
+    if(kind == 'start'){
+      //주소xy좌표구하기
     Geocoding? info = null;
     var params = {
       'version': '1',
@@ -144,14 +147,71 @@ class Navicontroller extends GetxController {
       'callback': 'result',
       'appKey': 'l7xx71089ab0fff0470e97ab985297aa1343',
       'coordType': 'WGS84GEO',
-      'city_do': Navicontroller.to.jusolist[i].siNm,
-      'gu_gun': Navicontroller.to.jusolist[i].sggNm,
-      'dong': Navicontroller.to.jusolist[i].emdNm,
-      'bunji': Navicontroller.to.jusolist[i].lnbrSlno.toString() != '0'
-          ? Navicontroller.to.jusolist[i].lnbrMnnm.toString() +
+      'city_do': Navicontroller.to.jusoliststart[i].siNm,
+      'gu_gun': Navicontroller.to.jusoliststart[i].sggNm,
+      'dong': Navicontroller.to.jusoliststart[i].emdNm,
+      'bunji': Navicontroller.to.jusoliststart[i].lnbrSlno.toString() != '0'
+          ? Navicontroller.to.jusoliststart[i].lnbrMnnm.toString() +
               '-' +
-              Navicontroller.to.jusolist[i].lnbrSlno.toString()
-          : Navicontroller.to.jusolist[i].lnbrMnnm
+              Navicontroller.to.jusoliststart[i].lnbrSlno.toString()
+          : Navicontroller.to.jusoliststart[i].lnbrMnnm
+    };
+    var response = await Dio().get(
+        'https://apis.openapi.sk.com/tmap/geo/geocoding',
+        queryParameters: params);
+    if (response.statusCode == 200) {
+      info = Geocoding.fromJson(response.data["coordinateInfo"]);
+    }
+
+    // String juso = Navicontroller.to.jusolist[i].upperAddrName.toString() +
+    //     Navicontroller.to.jusolist[i].middleAddrName.toString() +
+    //     Navicontroller.to.jusolist[i].lowerAddrName.toString();
+    // List<String> temp = Navicontroller.to.searchlist[i].split('/');
+
+    double lat = double.parse(info!.lat.toString());
+    double lon = double.parse(info.lon.toString());
+
+    if (!mcontroller.isCompleted) return;
+    final cont = await mcontroller.future;
+    cont.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(lat, lon),
+        zoom: 14.0,
+      ),
+    ));
+    //검색창축소
+    sc.snapToExtent(0.3);
+    //마커추가
+    naviMarker.add(Marker(
+      markerId: MarkerId('start'),
+      position: LatLng(lat, lon),
+    ));
+
+    //최근검색추가
+    innersaveresultjuso(Navicontroller.to.jusoliststart[i], lat, lon,'start');
+
+    //리스트초기화
+    jusoliststart.clear();
+    naviindex(2);
+
+    }else if(kind == 'end'){
+      //주소xy좌표구하기
+    Geocoding? info = null;
+    var params = {
+      'version': '1',
+      'format': 'json',
+      'callback': 'result',
+      'appKey': 'l7xx71089ab0fff0470e97ab985297aa1343',
+      'coordType': 'WGS84GEO',
+      'city_do': Navicontroller.to.jusolistend[i].siNm,
+      'gu_gun': Navicontroller.to.jusolistend[i].sggNm,
+      'dong': Navicontroller.to.jusolistend[i].emdNm,
+      'bunji': Navicontroller.to.jusolistend[i].lnbrSlno.toString() != '0'
+          ? Navicontroller.to.jusolistend[i].lnbrMnnm.toString() +
+              '-' +
+              Navicontroller.to.jusolistend[i].lnbrSlno.toString()
+          : Navicontroller.to.jusolistend[i].lnbrMnnm
     };
     var response = await Dio().get(
         'https://apis.openapi.sk.com/tmap/geo/geocoding',
@@ -186,11 +246,13 @@ class Navicontroller extends GetxController {
     ));
 
     //최근검색추가
-    innersaveresultjuso(Navicontroller.to.jusolist[i], lat, lon);
+    innersaveresultjuso(Navicontroller.to.jusolistend[i], lat, lon,'end');
 
     //리스트초기화
-    jusolist.clear();
-    naviindex(2);
+    jusolistend.clear();
+    naviindex(3);
+    }
+    
   }
 
   //화면이동시 marker이동
@@ -395,7 +457,7 @@ class Navicontroller extends GetxController {
   //검색결과 마커셋팅
   clicktosearchlist(Completer<GoogleMapController> mcontroller,
       SheetController sc, int i,String kindvalue) async {
-    List<String> temp = Navicontroller.to.searchlist[i].split('/');
+    List<String> temp = Navicontroller.to.searchlistend[i].split('/');
 
     double lat = double.parse(temp[2]);
     double lon = double.parse(temp[3]);
@@ -434,19 +496,32 @@ class Navicontroller extends GetxController {
     naviindex(3);
   }
 
-  //검색결과 셋팅
+  //히스토리검색 셋팅
   void listsearch() async {
-    if (await storage.containsKey(key: 'searchlist')) {
-      String? searchtext = await storage.read(key: 'searchlist');
-      List<dynamic> setsearchlist = searchtext.toString().split(',');
-      setsearchlist.forEach((element) {
-        Navicontroller.to.searchlist.add(element);
+    if (await storage.containsKey(key: 'searchliststart')) {
+      String? searchtext = await storage.read(key: 'searchliststart');
+      List<dynamic> searchliststart = searchtext.toString().split(',');
+      searchliststart.forEach((element) {
+        Navicontroller.to.searchliststart.add(element);
+      });
+    }
+    if (await storage.containsKey(key: 'searchlistend')) {
+      String? searchtext = await storage.read(key: 'searchlistend');
+      List<dynamic> setsearchlistend = searchtext.toString().split(',');
+      setsearchlistend.forEach((element) {
+        Navicontroller.to.searchlistend.add(element);
       });
     }
   }
 
   //검색결과 내부저장
-  Future<void> innersaveresultjuso(DoroJuso i, double lat, double lon) async {
+  Future<void> innersaveresultjuso(DoroJuso i, double lat, double lon,String kind) async {
+    String searchlist='';
+    if(kind == 'start'){
+       searchlist='searchliststart';
+    }else if(kind == 'end'){
+       searchlist ='searchlistend';
+    }
     var searchresult;
     List<dynamic> templist = [];
     templist.add(i.bdNm.toString() +
@@ -456,8 +531,8 @@ class Navicontroller extends GetxController {
         lat.toString() +
         '/' +
         lon.toString());
-    if (await storage.containsKey(key: 'searchlist')) {
-      searchresult = await storage.read(key: 'searchlist');
+    if (await storage.containsKey(key: searchlist)) {
+      searchresult = await storage.read(key: searchlist);
       templist.addAll(searchresult.toString().split(','));
     }
     //중복아이템 삭제
@@ -478,19 +553,19 @@ class Navicontroller extends GetxController {
     temp = temp.replaceAll(']', '');
 
     await storage.write(
-      key: 'searchlist',
+      key: searchlist,
       value: temp,
     );
   }
 
   //검색결과삭제
   Future<void> innerdeleteresultjuso(int index) async {
-    Navicontroller.to.searchlist.removeAt(index);
+    Navicontroller.to.jusolistend.removeAt(index);
     await storage.delete(key: 'searchlist');
-    if (Navicontroller.to.searchlist.length != 0) {
+    if (Navicontroller.to.jusolistend.length != 0) {
       await storage.write(
         key: 'searchlist',
-        value: Navicontroller.to.searchlist.join(','),
+        value: Navicontroller.to.jusolistend.join(','),
       );
     }
   }

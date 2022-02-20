@@ -52,6 +52,7 @@ class Navisearch extends StatelessWidget {
                         sc.expand();
                         FocusScope.of(context).unfocus();
                         Navicontroller.to.starttext('');
+                        Navicontroller.to.naviindex(0);
                       },
                       onChanged: (data) {
                     if (data.length >= 2) Navicontroller.to.getjuso(data,'start');
@@ -67,6 +68,7 @@ class Navisearch extends StatelessWidget {
                     sc.expand();
                     FocusScope.of(context).unfocus();
                     Navicontroller.to.endtext('');
+                    Navicontroller.to.naviindex(1);
                   },
                   onChanged: (data) {
                     if (data.length >= 2) Navicontroller.to.getjuso(data,'end');
@@ -74,26 +76,26 @@ class Navisearch extends StatelessWidget {
                   onSubmitted: (data) => Navicontroller.to.getjuso(data,'end'),
                   decoration: InputDecoration(labelText: Navicontroller.to.endtext.value),
                 ),
-                //0:검색히스토리리스트 1:검색결과리스트(출발지) 2:검색결과리스트(도착지) 3:경로검색 4:경로상 충전소위치
+                //0:검색히스토리리스트(출발지) 1:검색히스토리리스트(도착지) 2:검색결과리스트(출발지) 3:검색결과리스트(도착지) 4:경로검색 5:경로상 충전소위치
                 Obx(() {
                   switch (Navicontroller.to.naviindex.value) {
                     case 0:
-                      return Navicontroller.to.searchlist.length != 0
+                      return Navicontroller.to.searchliststart.length != 0
                           ? Container(
                               width: Get.size.width,
                               height: Get.size.height * 0.7,
                               child: ListView.builder(
                                   itemCount:
-                                      Navicontroller.to.searchlist.length,
+                                      Navicontroller.to.searchliststart.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     List<String> temp = Navicontroller
-                                        .to.searchlist[index]
+                                        .to.searchliststart[index]
                                         .split('/');
                                     return GestureDetector(
                                       onTap: () => Navicontroller.to
                                           .clicktosearchlist(
-                                              mcontroller, sc, index),
+                                              mcontroller, sc, index,'start'),
                                       child: Column(
                                         children: [
                                           Row(
@@ -128,8 +130,58 @@ class Navisearch extends StatelessWidget {
                               height: Get.size.height * 0.7,
                               child: Text('검색결과가 없습니다'),
                             );
-
                     case 1:
+                      return Navicontroller.to.searchlistend.length != 0
+                          ? Container(
+                              width: Get.size.width,
+                              height: Get.size.height * 0.7,
+                              child: ListView.builder(
+                                  itemCount:
+                                      Navicontroller.to.searchlistend.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    List<String> temp = Navicontroller
+                                        .to.searchlistend[index]
+                                        .split('/');
+                                    return GestureDetector(
+                                      onTap: () => Navicontroller.to
+                                          .clicktosearchlist(
+                                              mcontroller, sc, index,'start'),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Text(temp[0]),
+                                                  Text(temp[1]),
+                                                ],
+                                              ),
+                                              IconButton(
+                                                onPressed: () {
+                                                  Navicontroller.to
+                                                      .innerdeleteresultjuso(
+                                                          index);
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                },
+                                                icon: Icon(Icons.delete),
+                                              ),
+                                            ],
+                                          ),
+                                          Container(
+                                            height: 10,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                            )
+                          : Container(
+                              height: Get.size.height * 0.7,
+                              child: Text('검색결과가 없습니다'),
+                            );
+                    case 2:
                       return Container(
                         width: Get.size.width,
                         height: Get.size.height * 0.7,
@@ -138,7 +190,7 @@ class Navisearch extends StatelessWidget {
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                 onTap: () => Navicontroller.to.clicktojuso(
-                                    mcontroller, sc, index, context),
+                                    mcontroller, sc, index, context,'start'),
                                 child: Column(
                                   children: [
                                     Text(Navicontroller.to.jusoliststart[index].bdNm
@@ -154,7 +206,7 @@ class Navisearch extends StatelessWidget {
                               );
                             }),
                       );
-                    case 2:
+                    case 3:
                       return Container(
                         width: Get.size.width,
                         height: Get.size.height * 0.7,
@@ -163,7 +215,7 @@ class Navisearch extends StatelessWidget {
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                 onTap: () => Navicontroller.to.clicktojuso(
-                                    mcontroller, sc, index, context),
+                                    mcontroller, sc, index, context,'end'),
                                 child: Column(
                                   children: [
                                     Text(Navicontroller.to.jusolistend[index].bdNm
@@ -179,7 +231,7 @@ class Navisearch extends StatelessWidget {
                               );
                             }),
                       );
-                    case 3:
+                    case 4:
                       return Container(
                         child: TextButton(
                           child: Text('경로검색하기'),
@@ -188,7 +240,7 @@ class Navisearch extends StatelessWidget {
                         ),
                       );
 
-                    case 4:
+                    case 5:
                       return Container(
                         child: Text('전기충전소 리스트'),
                       );
