@@ -21,9 +21,11 @@ class Navicontroller extends GetxController {
   static Navicontroller get to => Get.find();
   var dio = Dio(BaseOptions(baseUrl: Statecontroller.to.serverUrl.value));
 
-  RxString starttext = ''.obs;
-  RxString endtext = '도착지'.obs;
-  final currentPostion = LatLng(37.5646279797785, 126.97756750354343).obs;
+  TextEditingController startcontroller = new TextEditingController();
+  TextEditingController endcontroller = new TextEditingController();
+  SheetController sc = SheetController();
+
+  final currentPostion = LatLng(37.56356428218978, 126.97377552185294).obs;
   RxList<DoroJuso> jusoliststart = <DoroJuso>[].obs;
   RxList<DoroJuso> jusolistend = <DoroJuso>[].obs;
   RxSet<Marker> naviMarker = <Marker>{}.obs;
@@ -37,6 +39,7 @@ class Navicontroller extends GetxController {
     // await storage.delete(key: 'searchlist');
     getpostion();
     listsearch();
+    Navicontroller.to.endcontroller.text = "도착지 검색";
   }
 
   void onclose() {
@@ -48,19 +51,17 @@ class Navicontroller extends GetxController {
     Navicontroller.to.searchlistend.clear();
     Navicontroller.to.routerlist.clear();
     Navicontroller.to.naviMarker.clear();
+    Navicontroller.to.startcontroller.text = "";
+    Navicontroller.to.endcontroller.text = "";
   }
 
   //현제위치 가져져와서 표시하기
   void getpostion() async {
     //현제위치
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     //현제위치
     currentPostion(LatLng(position.latitude, position.longitude));
-    //마커추가
-    Navicontroller.to.naviMarker.add(Marker(
-      markerId: MarkerId('start'),
-      position: LatLng(position.latitude, position.longitude),
-    ));
 
     //주소추출
     jusoliststart.clear();
@@ -81,21 +82,20 @@ class Navicontroller extends GetxController {
       Map<String, dynamic> responseMap = jsonDecode(response.toString());
       var temp = ReversGeocoding.fromJson(responseMap);
 
-      if (temp.addressInfo!.buildingName.toString() == ' ') {
-        starttext(temp.addressInfo!.buildingName.toString());
+      if (temp.addressInfo!.buildingName.toString() != ' ') {
+        startcontroller.text +=
+            "현위치 : " + temp.addressInfo!.buildingName.toString();
       } else {
-        starttext(temp.addressInfo!.roadName.toString() +
+        startcontroller.text += temp.addressInfo!.roadName.toString() +
             '-' +
-            temp.addressInfo!.buildingIndex.toString());
+            temp.addressInfo!.buildingIndex.toString();
       }
     }
   }
 
   //주소검색
-  void getjuso(String text,String kindvalue) {
+  void getjuso(String text, String kindvalue) {
     EasyDebounce.debounce('jusosearch', Duration(milliseconds: 200), () async {
-      
-      
       var prams = {
         'confmKey': 'U01TX0FVVEgyMDIxMTIyMDAxMDk1NjExMjA0ODQ=',
         'currentPage': '1',
@@ -113,49 +113,66 @@ class Navicontroller extends GetxController {
           return DoroJuso.fromJson(json);
         }).toList();
 
-        if(kindvalue == 'start'){
-          jusoliststart.clear();  
+        if (kindvalue == 'start') {
+          jusoliststart.clear();
           info.forEach((element) {
             jusoliststart.add(element);
           });
           naviindex(2);
-        }else{
-          jusolistend.clear();  
+        } else {
+          jusolistend.clear();
           info.forEach((element) {
             jusolistend.add(element);
           });
           naviindex(3);
         }
-        
       }
-      
-      
     });
   }
 
   //주소위치로 이동
-  void clicktojuso(Completer<GoogleMapController> mcontroller,
-      SheetController sc, int i, BuildContext context,String kind) async {
+  void clicktojuso(int i, BuildContext context, String kind,
+      Completer<GoogleMapController> mcontroller) async {
     FocusScope.of(context).unfocus();
     EasyDebounce.cancel('jusosearch');
-    if(kind == 'start'){
-      //주소xy좌표구하기
+
+    //주소xy좌표구하기
     Geocoding? info = null;
-    var params = {
-      'version': '1',
-      'format': 'json',
-      'callback': 'result',
-      'appKey': 'l7xx71089ab0fff0470e97ab985297aa1343',
-      'coordType': 'WGS84GEO',
-      'city_do': Navicontroller.to.jusoliststart[i].siNm,
-      'gu_gun': Navicontroller.to.jusoliststart[i].sggNm,
-      'dong': Navicontroller.to.jusoliststart[i].emdNm,
-      'bunji': Navicontroller.to.jusoliststart[i].lnbrSlno.toString() != '0'
-          ? Navicontroller.to.jusoliststart[i].lnbrMnnm.toString() +
-              '-' +
-              Navicontroller.to.jusoliststart[i].lnbrSlno.toString()
-          : Navicontroller.to.jusoliststart[i].lnbrMnnm
-    };
+    Map<String, dynamic> params = {};
+    if (kind == 'start') {
+      params = {
+        'version': '1',
+        'format': 'json',
+        'callback': 'result',
+        'appKey': 'l7xx71089ab0fff0470e97ab985297aa1343',
+        'coordType': 'WGS84GEO',
+        'city_do': Navicontroller.to.jusoliststart[i].siNm,
+        'gu_gun': Navicontroller.to.jusoliststart[i].sggNm,
+        'dong': Navicontroller.to.jusoliststart[i].emdNm,
+        'bunji': Navicontroller.to.jusoliststart[i].lnbrSlno.toString() != '0'
+            ? Navicontroller.to.jusoliststart[i].lnbrMnnm.toString() +
+                '-' +
+                Navicontroller.to.jusoliststart[i].lnbrSlno.toString()
+            : Navicontroller.to.jusoliststart[i].lnbrMnnm
+      };
+    } else {
+      params = {
+        'version': '1',
+        'format': 'json',
+        'callback': 'result',
+        'appKey': 'l7xx71089ab0fff0470e97ab985297aa1343',
+        'coordType': 'WGS84GEO',
+        'city_do': Navicontroller.to.jusolistend[i].siNm,
+        'gu_gun': Navicontroller.to.jusolistend[i].sggNm,
+        'dong': Navicontroller.to.jusolistend[i].emdNm,
+        'bunji': Navicontroller.to.jusolistend[i].lnbrSlno.toString() != '0'
+            ? Navicontroller.to.jusolistend[i].lnbrMnnm.toString() +
+                '-' +
+                Navicontroller.to.jusolistend[i].lnbrSlno.toString()
+            : Navicontroller.to.jusolistend[i].lnbrMnnm
+      };
+    }
+
     var response = await Dio().get(
         'https://apis.openapi.sk.com/tmap/geo/geocoding',
         queryParameters: params);
@@ -170,7 +187,7 @@ class Navicontroller extends GetxController {
 
     double lat = double.parse(info!.lat.toString());
     double lon = double.parse(info.lon.toString());
-
+    //카메라이동
     if (!mcontroller.isCompleted) return;
     final cont = await mcontroller.future;
     cont.animateCamera(CameraUpdate.newCameraPosition(
@@ -180,79 +197,45 @@ class Navicontroller extends GetxController {
         zoom: 14.0,
       ),
     ));
+
     //검색창축소
     sc.snapToExtent(0.3);
     //마커추가
-    naviMarker.add(Marker(
-      markerId: MarkerId('start'),
-      position: LatLng(lat, lon),
-    ));
+    int index = 0;
+    if (naviMarker.any((e) => e.markerId == kind)) {
+      naviMarker.forEach((e) {
+        if (e.markerId == kind) {
+          //마커지우고
+          naviMarker.remove(index);
+          //마커 다시 그리고
+          naviMarker.add(Marker(
+            markerId: MarkerId(kind),
+            position: LatLng(lat, lon),
+          ));
+        }
+        ;
+        index++;
+      });
+    } else {
+      naviMarker.add(Marker(
+        markerId: MarkerId(kind),
+        position: LatLng(lat, lon),
+      ));
+    }
 
     //최근검색추가
-    innersaveresultjuso(Navicontroller.to.jusoliststart[i], lat, lon,'start');
+    if (kind == 'start') {
+      innersaveresultjuso(Navicontroller.to.jusoliststart[i], lat, lon, kind);
+      startcontroller.text = Navicontroller.to.jusoliststart[i].bdNm.toString();
+    } else {
+      innersaveresultjuso(Navicontroller.to.jusolistend[i], lat, lon, kind);
+      endcontroller.text = Navicontroller.to.jusolistend[i].bdNm.toString();
+    }
 
     //리스트초기화
     jusoliststart.clear();
-    naviindex(2);
-
-    }else if(kind == 'end'){
-      //주소xy좌표구하기
-    Geocoding? info = null;
-    var params = {
-      'version': '1',
-      'format': 'json',
-      'callback': 'result',
-      'appKey': 'l7xx71089ab0fff0470e97ab985297aa1343',
-      'coordType': 'WGS84GEO',
-      'city_do': Navicontroller.to.jusolistend[i].siNm,
-      'gu_gun': Navicontroller.to.jusolistend[i].sggNm,
-      'dong': Navicontroller.to.jusolistend[i].emdNm,
-      'bunji': Navicontroller.to.jusolistend[i].lnbrSlno.toString() != '0'
-          ? Navicontroller.to.jusolistend[i].lnbrMnnm.toString() +
-              '-' +
-              Navicontroller.to.jusolistend[i].lnbrSlno.toString()
-          : Navicontroller.to.jusolistend[i].lnbrMnnm
-    };
-    var response = await Dio().get(
-        'https://apis.openapi.sk.com/tmap/geo/geocoding',
-        queryParameters: params);
-    if (response.statusCode == 200) {
-      info = Geocoding.fromJson(response.data["coordinateInfo"]);
-    }
-
-    // String juso = Navicontroller.to.jusolist[i].upperAddrName.toString() +
-    //     Navicontroller.to.jusolist[i].middleAddrName.toString() +
-    //     Navicontroller.to.jusolist[i].lowerAddrName.toString();
-    // List<String> temp = Navicontroller.to.searchlist[i].split('/');
-
-    double lat = double.parse(info!.lat.toString());
-    double lon = double.parse(info.lon.toString());
-
-    if (!mcontroller.isCompleted) return;
-    final cont = await mcontroller.future;
-    cont.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        bearing: 0,
-        target: LatLng(lat, lon),
-        zoom: 14.0,
-      ),
-    ));
-    //검색창축소
-    sc.snapToExtent(0.3);
-    //마커추가
-    naviMarker.add(Marker(
-      markerId: MarkerId('end'),
-      position: LatLng(lat, lon),
-    ));
-
-    //최근검색추가
-    innersaveresultjuso(Navicontroller.to.jusolistend[i], lat, lon,'end');
-
-    //리스트초기화
     jusolistend.clear();
-    naviindex(3);
-    }
-    
+    naviindex(4);
   }
 
   //화면이동시 marker이동
@@ -293,7 +276,7 @@ class Navicontroller extends GetxController {
       "searchOption": '0',
       "trafficInfo": 'Y'
     };
-    print(prams);
+
     var response = await Dio()
         .get('https://apis.openapi.sk.com/tmap/routes', queryParameters: prams);
 
@@ -455,10 +438,14 @@ class Navicontroller extends GetxController {
   }
 
   //검색결과 마커셋팅
-  clicktosearchlist(Completer<GoogleMapController> mcontroller,
-      SheetController sc, int i,String kindvalue) async {
-    List<String> temp = Navicontroller.to.searchlistend[i].split('/');
-
+  clicktosearchlist(
+      int i, String kind, Completer<GoogleMapController> mcontroller) async {
+    List<String> temp = [];
+    if (kind == 'start') {
+      temp = Navicontroller.to.searchliststart[i].split('/');
+    } else {
+      temp = Navicontroller.to.searchlistend[i].split('/');
+    }
     double lat = double.parse(temp[2]);
     double lon = double.parse(temp[3]);
 
@@ -473,27 +460,36 @@ class Navicontroller extends GetxController {
     ));
     //검색창축소
     sc.snapToExtent(0.3);
-    if(kindvalue =='start'){
-      //마커추가
-      naviMarker.add(Marker(
-        markerId: MarkerId('end'),
-        position: LatLng(lat, lon),
-      ));
-
-      //리스트초기화
-      jusoliststart.clear();
-    }else{
-      //마커추가
-      naviMarker.add(Marker(
-        markerId: MarkerId('end'),
-        position: LatLng(lat, lon),
-      ));
-
-      //리스트초기화
-      jusolistend.clear();
+    //검색테스트 추가
+    if (kind == 'start') {
+      startcontroller.text = temp[0].toString();
+    } else {
+      endcontroller.text = temp[0].toString();
     }
-    
-    naviindex(3);
+
+    int index = 0;
+    if (naviMarker.any((e) => e.markerId == kind)) {
+      naviMarker.forEach((e) {
+        if (e.markerId == kind) {
+          //마커지우고
+          naviMarker.remove(index);
+          //마커 다시 그리고
+          naviMarker.add(Marker(
+            markerId: MarkerId(kind),
+            position: LatLng(lat, lon),
+          ));
+        }
+        ;
+        index++;
+      });
+    } else {
+      naviMarker.add(Marker(
+        markerId: MarkerId(kind),
+        position: LatLng(lat, lon),
+      ));
+    }
+
+    naviindex(4);
   }
 
   //히스토리검색 셋팅
@@ -515,12 +511,13 @@ class Navicontroller extends GetxController {
   }
 
   //검색결과 내부저장
-  Future<void> innersaveresultjuso(DoroJuso i, double lat, double lon,String kind) async {
-    String searchlist='';
-    if(kind == 'start'){
-       searchlist='searchliststart';
-    }else if(kind == 'end'){
-       searchlist ='searchlistend';
+  Future<void> innersaveresultjuso(
+      DoroJuso i, double lat, double lon, String kind) async {
+    String searchlist = '';
+    if (kind == 'start') {
+      searchlist = 'searchliststart';
+    } else if (kind == 'end') {
+      searchlist = 'searchlistend';
     }
     var searchresult;
     List<dynamic> templist = [];
