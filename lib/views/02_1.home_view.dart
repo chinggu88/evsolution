@@ -97,75 +97,83 @@ class Home extends StatelessWidget {
               ),
             ),
             SizedBox(height: Get.size.height * 0.038),
-            Container(
-              width: Get.size.width * 0.91,
-              height: Get.size.height * 0.134,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: const Color(0x1a000000),
-                        offset: Offset(2, 2),
-                        blurRadius: 4,
-                        spreadRadius: 0)
+            GestureDetector(
+              onTap: () => Rootcontroller.to.changeIndex(1),
+              child: Container(
+                width: Get.size.width * 0.91,
+                height: Get.size.height * 0.134,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: const Color(0x1a000000),
+                          offset: Offset(2, 2),
+                          blurRadius: 4,
+                          spreadRadius: 0)
+                    ],
+                    gradient: LinearGradient(
+                        begin:
+                            Alignment(0.49999941210803356, 0.7238717377749965),
+                        end: Alignment(1.444515475402662, -1.1987297492747653),
+                        colors: [
+                          const Color(0xff00229b),
+                          const Color(0xffd0f6ff)
+                        ])),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/image/home/mapicon.svg'),
+                    SizedBox(width: Get.size.width * 0.05),
+                    new Text("내 주변 충전소 찾기",
+                        style: TextStyle(
+                          fontFamily: 'Pre-Medium',
+                          color: Color(0xffffffff),
+                          fontSize: 22,
+                          fontWeight: FontWeight.w500,
+                          fontStyle: FontStyle.normal,
+                        ))
                   ],
-                  gradient: LinearGradient(
-                      begin: Alignment(0.49999941210803356, 0.7238717377749965),
-                      end: Alignment(1.444515475402662, -1.1987297492747653),
-                      colors: [
-                        const Color(0xff00229b),
-                        const Color(0xffd0f6ff)
-                      ])),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset('assets/image/home/mapicon.svg'),
-                  SizedBox(width: Get.size.width * 0.05),
-                  new Text("내 주변 충전소 찾기",
-                      style: TextStyle(
-                        fontFamily: 'Pre-Medium',
-                        color: Color(0xffffffff),
-                        fontSize: 22,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.normal,
-                      ))
-                ],
+                ),
               ),
             ),
             SizedBox(height: Get.size.height * 0.013),
-            Container(
-              width: Get.size.width * 0.91,
-              height: Get.size.height * 0.134,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: const Color(0x1a000000),
-                        offset: Offset(2, 2),
-                        blurRadius: 4,
-                        spreadRadius: 0)
+            GestureDetector(
+              onTap: () => Rootcontroller.to.changeIndex(2),
+              child: Container(
+                width: Get.size.width * 0.91,
+                height: Get.size.height * 0.134,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: const Color(0x1a000000),
+                          offset: Offset(2, 2),
+                          blurRadius: 4,
+                          spreadRadius: 0)
+                    ],
+                    gradient: LinearGradient(
+                        begin:
+                            Alignment(0.49999941210803356, 0.7238717377749965),
+                        end: Alignment(1.444515475402662, -1.1987297492747653),
+                        colors: [
+                          const Color(0xff00229b),
+                          const Color(0xffd0f6ff)
+                        ])),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/image/home/naviicon.svg'),
+                    SizedBox(width: Get.size.width * 0.05),
+                    new Text("경로상 충전소 찾기",
+                        style: TextStyle(
+                          fontFamily: 'Pre-Medium',
+                          color: Color(0xffffffff),
+                          fontSize: 22,
+                          fontWeight: FontWeight.w500,
+                          fontStyle: FontStyle.normal,
+                        ))
                   ],
-                  gradient: LinearGradient(
-                      begin: Alignment(0.49999941210803356, 0.7238717377749965),
-                      end: Alignment(1.444515475402662, -1.1987297492747653),
-                      colors: [
-                        const Color(0xff00229b),
-                        const Color(0xffd0f6ff)
-                      ])),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset('assets/image/home/naviicon.svg'),
-                  SizedBox(width: Get.size.width * 0.05),
-                  new Text("경로상 충전소 찾기",
-                      style: TextStyle(
-                        fontFamily: 'Pre-Medium',
-                        color: Color(0xffffffff),
-                        fontSize: 22,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.normal,
-                      ))
-                ],
+                ),
               ),
             ),
             SizedBox(height: Get.size.height * 0.05),

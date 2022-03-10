@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:evsolution/controller/stats_controller.dart';
 import 'package:evsolution/model/userinfo.dart';
@@ -19,7 +21,7 @@ class Logincontroller extends GetxController {
   var dio = Dio(BaseOptions(baseUrl: Statecontroller.to.serverUrl.value));
   //카카오톡 설치여부
   RxBool iskakaotalkInstalled = false.obs;
-   @override
+  @override
   void onInit() async {
     super.onInit();
     getlogininfo();
@@ -31,17 +33,17 @@ class Logincontroller extends GetxController {
     try {
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
+      print(googleUser!.displayName.toString());
       // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth =
-          await googleUser!.authentication;
+          await googleUser.authentication;
 
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      print(googleUser.displayName);
+
       if (googleUser.email != null) {
         setlogininfo(
             googleUser.email, 'google', googleAuth.accessToken.toString());
@@ -55,6 +57,7 @@ class Logincontroller extends GetxController {
       print(e);
     }
   }
+
   // google logout
   Future<void> signOutWithGoogle() async {
     Statecontroller.to.loginType('');
@@ -62,10 +65,10 @@ class Logincontroller extends GetxController {
     FirebaseAuth.instance.signOut();
     Get.offNamed('/login');
   }
-  
+
   //naver login
   Future<void> loginWithNaver() async {
-    print("naver login ");
+    log("naver login ");
     try {
       final NaverLoginResult result = await FlutterNaverLogin.logIn();
       final bool log = await FlutterNaverLogin.isLoggedIn;
@@ -91,11 +94,13 @@ class Logincontroller extends GetxController {
     Statecontroller.to.loginId('');
     Get.offNamed('/login');
   }
-    //카카오톡 설치여부 확인
-    initKakaoTalkInstalled() async {
+
+  //카카오톡 설치여부 확인
+  initKakaoTalkInstalled() async {
     final installed = await isKakaoTalkInstalled();
     iskakaotalkInstalled(installed);
-    }
+  }
+
   //웹로그인
   loginWithkakao() async {
     try {
@@ -158,20 +163,20 @@ class Logincontroller extends GetxController {
     );
     return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
   }
-  
-    //최초로그인정보 저장 휴대폰 내부 저장소
+
+  //최초로그인정보 저장 휴대폰 내부 저장소
   setlogininfo(String id, String kind, String token) async {
     await storage.write(key: "id", value: id); //로그인아이디
     await storage.write(key: "kind", value: kind); //로그인종류
     await storage.write(key: "token", value: token); //로그인토큰
   }
 
-    //로그아웃시 로그인정보 리셋
+  //로그아웃시 로그인정보 리셋
   resetlogininfo() async {
-    await storage.deleteAll();
+    // await storage.deleteAll();
   }
-  
-    //자동로그인 설정
+
+  //자동로그인 설정
   getlogininfo() async {
     var userInfo = await storage.readAll();
     List<Userinfo> info;
@@ -199,24 +204,22 @@ class Logincontroller extends GetxController {
   //최초 로그인정보 저장 데이터베이스
   insertlogininfoDB(String id, String kind, String token) async {
     List<Userinfo> info;
-    String? fmtoken =await FirebaseMessaging.instance.getToken() ;
-    if(fmtoken != null) {
+    String? fmtoken = await FirebaseMessaging.instance.getToken();
+    if (fmtoken != null) {
       var response = await dio.post('/login/userinfo',
-        data: {'id': id, 'kind': kind, 'token': token,'fmtoken':fmtoken});
-    print(response.data);
-    if (response.statusCode == 200) {
-      info = (response.data).map<Userinfo>((json) {
-        return Userinfo.fromJson(json);
-      }).toList();
-      if (info.length == 1) {
-        Statecontroller.to.loginType(info[0].kind);
-        Statecontroller.to.loginId(info[0].id);
-        await Geolocator.requestPermission();
-        Get.offNamed('/root');
+          data: {'id': id, 'kind': kind, 'token': token, 'fmtoken': fmtoken});
+
+      if (response.statusCode == 200) {
+        info = (response.data).map<Userinfo>((json) {
+          return Userinfo.fromJson(json);
+        }).toList();
+        if (info.length == 1) {
+          Statecontroller.to.loginType(info[0].kind);
+          Statecontroller.to.loginId(info[0].id);
+          await Geolocator.requestPermission();
+          Get.offNamed('/root');
+        }
       }
     }
-    }
-
-    
   }
 }

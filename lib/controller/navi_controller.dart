@@ -81,8 +81,7 @@ class Navicontroller extends GetxController {
     if (response.statusCode == 200) {
       Map<String, dynamic> responseMap = jsonDecode(response.toString());
       var temp = ReversGeocoding.fromJson(responseMap);
-
-      if (temp.addressInfo!.buildingName.toString() != ' ') {
+      if (temp.addressInfo!.buildingName.toString() != '') {
         startcontroller.text +=
             "현위치 : " + temp.addressInfo!.buildingName.toString();
       } else {
@@ -250,6 +249,7 @@ class Navicontroller extends GetxController {
   }
 
   void searchStarttoEnd(Completer<GoogleMapController> mcontroller) async {
+    sc.hide();
     List<MyProperties> mp = [];
     double startx = 0.0, starty = 0.0, endx = 0.0, endy = 0.0;
     naviMarker.forEach((e) {

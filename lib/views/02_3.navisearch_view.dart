@@ -14,36 +14,51 @@ class Navisearch extends StatelessWidget {
     return Scaffold(
         body: SlidingSheet(
       body: Obx(() {
-        return GoogleMap(
-          mapType: MapType.normal,
-          initialCameraPosition: CameraPosition(
-            target: Navicontroller.to.currentPostion.value,
-            zoom: 14.4746,
-          ),
-          onMapCreated: (GoogleMapController controller) async {
-            mcontroller.complete(controller);
-            //위치이동
-            //현제위치
-            Position position = await Geolocator.getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.high);
-            //마커추가
-            Navicontroller.to.naviMarker.add(Marker(
-              markerId: MarkerId('start'),
-              position: LatLng(position.latitude, position.longitude),
-            ));
-            final cont = await mcontroller.future;
-            // cont.moveCamera(cameraUpdate)
-            // cont.animateCamera(CameraUpdate.newCameraPosition(
-            cont.moveCamera(CameraUpdate.newCameraPosition(
-              CameraPosition(
-                bearing: 0,
-                target: LatLng(position.latitude, position.longitude),
-                zoom: 14.0,
+        return Stack(
+          children: [
+            GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: CameraPosition(
+                target: Navicontroller.to.currentPostion.value,
+                zoom: 14.4746,
               ),
-            ));
-          },
-          markers: Navicontroller.to.naviMarker.value,
-          polylines: Navicontroller.to.routerlist.value,
+              onMapCreated: (GoogleMapController controller) async {
+                mcontroller.complete(controller);
+                //위치이동
+                //현제위치
+                Position position = await Geolocator.getCurrentPosition(
+                    desiredAccuracy: LocationAccuracy.high);
+                //마커추가
+                Navicontroller.to.naviMarker.add(Marker(
+                  markerId: MarkerId('start'),
+                  position: LatLng(position.latitude, position.longitude),
+                ));
+                final cont = await mcontroller.future;
+                // cont.moveCamera(cameraUpdate)
+                // cont.animateCamera(CameraUpdate.newCameraPosition(
+                cont.moveCamera(CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                    bearing: 0,
+                    target: LatLng(position.latitude, position.longitude),
+                    zoom: 14.0,
+                  ),
+                ));
+              },
+              markers: Navicontroller.to.naviMarker.value,
+              polylines: Navicontroller.to.routerlist.value,
+            ),
+            //경로상 충전소 위치
+            Positioned(
+                bottom: Get.size.height * 0.01,
+                child: Opacity(
+                  opacity: 0.0,
+                  child: Container(
+                    width: Get.size.width,
+                    height: Get.size.width * 0.3,
+                    // color: Colors.red,
+                  ),
+                )),
+          ],
         );
       }),
       controller: Navicontroller.to.sc,

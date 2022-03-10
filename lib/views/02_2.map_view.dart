@@ -25,35 +25,21 @@ class map extends StatelessWidget {
         body: Obx(() {
           return Stack(children: [
             GoogleMap(
-              mapType: MapType.normal,
-              initialCameraPosition: CameraPosition(
-                target: Mapcontroller.to.currentPostion.value,
-                zoom: 14.4746,
-              ),
-              onMapCreated: (GoogleMapController controller) async {
-                gcontroller.complete(controller);
-                //위치이동
-                //현제위치
-                Position position = await Geolocator.getCurrentPosition(
-                    desiredAccuracy: LocationAccuracy.high);
-                final cont = await gcontroller.future;
-                // cont.moveCamera(cameraUpdate)
-                // cont.animateCamera(CameraUpdate.newCameraPosition(
-                cont.moveCamera(CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    bearing: 0,
-                    target: LatLng(position.latitude, position.longitude),
-                    zoom: 14.4746,
-                  ),
-                ));
-              },
-              onCameraIdle: () => Mapcontroller.to.onCameraIdle(gcontroller),
-              markers: Mapcontroller.to.evMarker.value,
-              onTap: (LatLng pos) {
-                Mapcontroller.to.pcontroller.close();
-                // Mapcontroller.to.markerset();
-              },
-            ),
+                mapType: MapType.normal,
+                initialCameraPosition: CameraPosition(
+                  target: Mapcontroller.to.currentPostion.value,
+                  zoom: 14.4746,
+                ),
+                onMapCreated: (GoogleMapController controller) async {
+                  gcontroller.complete(controller);
+                },
+                onCameraIdle: () => Mapcontroller.to.onCameraIdle(gcontroller),
+                markers: Mapcontroller.to.evMarker.value,
+                onTap: (LatLng pos) {
+                  Mapcontroller.to.pcontroller.close();
+                  Mapcontroller.to.markerset();
+                },
+                myLocationEnabled: true),
             Positioned(
               left: Get.size.width * 0.29,
               top: Get.size.height * 0.806,

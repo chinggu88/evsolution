@@ -32,6 +32,7 @@ class Mapcontroller extends GetxController {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     currentPostion(LatLng(position.latitude, position.longitude));
+    print('currentPostion ${currentPostion}');
   }
 
   @override
@@ -44,9 +45,7 @@ class Mapcontroller extends GetxController {
 
   //화면이동
   void onCameraIdle(Completer<GoogleMapController> gcontroller) async {
-    print('onCameraIdle');
     var response;
-
     if (!gcontroller.isCompleted) return;
     final cont = await gcontroller.future;
     LatLngBounds ragion = await cont.getVisibleRegion();
@@ -62,16 +61,11 @@ class Mapcontroller extends GetxController {
           return Stationinfo.fromJson(json);
         }).toList();
 
-        if (evMarker.length == 0) {
-          setMarker();
-        }
-
-        print('evMarker ${evMarker.length}');
-        print('stationinfo ${stationinfo.length}');
         //기존마커리스트와 새로운 마커리스트에서 새로 추가된 마커만 마커그리기
         //1.기존마커리스트에서 새로운 마커리스트와 겹치지 않는 마커 지우기
         int evindex = 0;
         Set<String> rmindex = {};
+        print('1 : evMarker foreach start');
         evMarker.forEach((ev) {
           bool chk = true;
           stationinfo.forEach((station) {
@@ -85,7 +79,7 @@ class Mapcontroller extends GetxController {
           evindex++;
         });
         //삭제
-        print('rmindex : ${rmindex.length}');
+        print('2 : rmindex foreach start');
         rmindex.forEach((e) {
           // evMarker.remove(e);
           evMarker.removeWhere((element) => element.markerId.value == e);
@@ -94,6 +88,7 @@ class Mapcontroller extends GetxController {
         //2.새로운마커리스트에서 기존마커리스트와 중복되지 않는 리스트 마커 그리기
         int stationindex = 0;
         Set<Stationinfo> tempstation = <Stationinfo>{};
+        print('3 : stationinfo foreach start');
         stationinfo.forEach((e) {
           bool chk = true;
           evMarker.forEach((ev) async {
@@ -106,6 +101,7 @@ class Mapcontroller extends GetxController {
           }
         });
         //추가
+        print('4 : tempstation foreach start');
         tempstation.forEach((e) async {
           switch (e.count) {
             case 0:
