@@ -5,6 +5,7 @@ import 'package:evsolution/controller/stats_controller.dart';
 import 'package:evsolution/model/dorojuso.dart';
 import 'package:evsolution/model/reverseGeocoding.dart';
 import 'package:evsolution/model/routers.dart';
+import 'package:evsolution/model/stationinfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
@@ -12,8 +13,10 @@ import 'package:dio/dio.dart';
 import 'package:evsolution/model/juso.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:evsolution/model/geocoding.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum naviWidgetName { savesearch, resultsearch, getresult, evstationlist }
 
@@ -26,11 +29,19 @@ class Navicontroller extends GetxController {
   SheetController sc = SheetController();
 
   final currentPostion = LatLng(37.56356428218978, 126.97377552185294).obs;
+  //출발지검색히스토리
   RxList<DoroJuso> jusoliststart = <DoroJuso>[].obs;
+  //도착지검색히스토리
   RxList<DoroJuso> jusolistend = <DoroJuso>[].obs;
+  //도착지,출발지,경로상 마커
   RxSet<Marker> naviMarker = <Marker>{}.obs;
   final naviindex = 0.obs;
+  //경로line
   RxSet<Polyline> routerlist = <Polyline>{}.obs;
+  //경로상 충전기 리스트
+  List<Stationinfo> stationinfo = <Stationinfo>[].obs;
+  //경로상 충전기 탭 번호
+  RxInt tap_num = (-1).obs;
   final storage = new FlutterSecureStorage();
   RxList<String> searchliststart = <String>[].obs;
   RxList<String> searchlistend = <String>[].obs;
@@ -51,6 +62,7 @@ class Navicontroller extends GetxController {
     Navicontroller.to.searchlistend.clear();
     Navicontroller.to.routerlist.clear();
     Navicontroller.to.naviMarker.clear();
+    Navicontroller.to.stationinfo.clear();
     Navicontroller.to.startcontroller.text = "";
     Navicontroller.to.endcontroller.text = "";
   }
@@ -368,73 +380,93 @@ class Navicontroller extends GetxController {
     final cont = await mcontroller.future;
     cont.animateCamera(CameraUpdate.newLatLngBounds(bound, 100));
 
-    // routerlist.add(Polyline(
-    //   polylineId: PolylineId('1'),
-    //   points: points_0,
-    //   color: Colors.red,
-    // ));
-    // routerlist.add(Polyline(
-    //   polylineId: PolylineId('2'),
-    //   points: points_1,
-    //   color: Colors.blue,
-    // ));
-    // routerlist.add(Polyline(
-    //   polylineId: PolylineId('3'),
-    //   points: points_2,
-    //   color: Colors.green,
-    // ));
-    // print(routerlist.length);
-    // routerlist.forEach((e) {
-    //   print("${e.points} to ${e.color}");
-    // });
-    // if (response.statusCode == 200) {
-    // List<features> info =(response.data["features"]).map<features>((json) {
-    //     return features.fromJson(json);
-    //   }).toList();
-    //   info.forEach((element) {
-    //     print(element.toJson()["geometry"]["type"]);
-    //     if(element.toJson()["geometry"]["type"] == 'LineString'){
-
-    //       List<GeometryList> temp =(element.toJson()["geometry"]).map<GeometryList>((json) {
-    //         return GeometryList.fromJson(json);
-    //       }).toList();
-    //       temp.forEach((e) {
-    //         print('lineString ${e.toString()}');
-    //        });
-    //     }
-    //     print(element.toJson()["properties"]);
-    //   });
-    // }
-    // var response = await dio.post('/navigation?startY=${startx}&startX=${starty}&endY=${endx}&endX=${endy}');
-
-    // if(response.statusCode == 200){
-    //   List<LatLng> points=[];
-    //   var temp = response.data.toString().replaceAll(']', '');
-    //   temp = temp.replaceAll('[', '');
-    //   temp = temp.replaceAll(' ', '');
-    //    List output = temp.split('}');
-
-    //    for(int i =0;i<output.length-1;i++){
-    //      var element = output[i].toString();
-    //      var result=element;
-    //     if(element[0] == ','){
-    //       result = element.toString().substring(1,element.length);
-    //     }
-    //      var e  = result.toString().replaceAll('{', '');
-    //      var xy = e.split(',');
-    //      var x = xy[1].toString().split(':');
-    //      var y = xy[0].toString().split(':');
-    //     points.add(LatLng(double.parse(x[1]),double.parse(y[1])));
-
-    //    }
-    //     //경로그리기
-    //     routerlist.add(Polyline(
-    //       polylineId: PolylineId('router'),
-    //       points:points,
-    //       color:Colors.red,
-    //     ));
-
-    // }
+    //test
+    stationinfo.add(Stationinfo.fromJson({
+      "lat": 37.5515012548,
+      "lng": 126.9139520503,
+      "businId": "EV",
+      "businNm": "에버온",
+      "statId": "EV000122",
+      "statUpdDt": "20211030003310",
+      "stat": "9",
+      "statNm": "마포 메세나폴리스아파트",
+      "count": 9,
+      "addr": "서울특별시 마포구 양화로 45 (서교동, 메세나폴리스)",
+      "parkingFree": "24시간 이용가능,입주민만 사용가능 거주자외출입제한"
+    }));
+    stationinfo.add(Stationinfo.fromJson({
+      "lat": 37.547595313672,
+      "lng": 126.9365446997,
+      "businId": "EV",
+      "businNm": "에버온",
+      "statId": "EV002224",
+      "statUpdDt": "20211030094213",
+      "stat": "2",
+      "statNm": "서울마포 세양청마루아파트",
+      "count": 2,
+      "addr": "서울특별시 마포구 독막로 209",
+      "parkingFree": "24시간 이용가능,입주민만 사용가능 거주자외출입제한"
+    }));
+    stationinfo.add(Stationinfo.fromJson({
+      "lat": 37.548963,
+      "lng": 126.940205,
+      "businId": "HE",
+      "businNm": "한국전기차충전서비스",
+      "statId": "HE000757",
+      "statUpdDt": "20211029093505",
+      "stat": "2",
+      "statNm": "전기안전공사 서울지역본부",
+      "count": 1,
+      "addr": "서울특별시 마포구 백범로 73",
+      "parkingFree": "24시간 이용가능"
+    }));
+    stationinfo.add(Stationinfo.fromJson({
+      "lat": 37.5477360786,
+      "lng": 126.9320622462,
+      "businId": "PI",
+      "businNm": "차지비",
+      "statId": "PI000244",
+      "statUpdDt": "20211029234356",
+      "stat": "2",
+      "statNm": "서울시 서강동 주민센터",
+      "count": 1,
+      "addr": "서울특별시 마포구 독막로 165",
+      "parkingFree": "24시간 이용가능"
+    }));
+    stationinfo.add(Stationinfo.fromJson({
+      "lat": 37.5516149385,
+      "lng": 126.9117247826,
+      "businId": "PI",
+      "businNm": "차지비",
+      "statId": "PI000248",
+      "statUpdDt": "20211030143214",
+      "stat": "3",
+      "statNm": "서울시 합정동 주민센터",
+      "count": 1,
+      "addr": "서울특별시 마포구 월드컵로5길 11",
+      "parkingFree": "24시간 이용가능"
+    }));
+    stationinfo.add(Stationinfo.fromJson({
+      "lat": 37.5470727699,
+      "lng": 126.9456466563,
+      "businId": "PI",
+      "businNm": "차지비",
+      "statId": "EV000122",
+      "statUpdDt": "20211030052501",
+      "stat": "2",
+      "statNm": "서울시 염리동 주민센터",
+      "count": 1,
+      "addr": "서울특별시 마포구 숭문길 14",
+      "parkingFree": "24시간 이용가능"
+    }));
+    print("----------------------------------${stationinfo.length}");
+    //마커추가
+    stationinfo.forEach((e) {
+      naviMarker.add(Marker(
+          markerId: MarkerId(e.statId!.toString()),
+          position: LatLng(e.lat!, e.lng!),
+          infoWindow: InfoWindow(title: e.statNm)));
+    });
   }
 
   //검색결과 마커셋팅
@@ -565,5 +597,160 @@ class Navicontroller extends GetxController {
         value: Navicontroller.to.jusolistend.join(','),
       );
     }
+  }
+
+  //경로상 충전소 리스트 탭
+  Taplist(int i, Completer<GoogleMapController> mcontroller) async {
+    //클릭 index
+    tap_num(i);
+    //리스트 다시 그리기
+    test();
+    //클릭한 목록으로 화면 이동
+    if (!mcontroller.isCompleted) return;
+    final cont = await mcontroller.future;
+    cont.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(stationinfo[i].lat!, stationinfo[i].lng!),
+        zoom: 16.0,
+      ),
+    ));
+
+    //마커infowindow 보이게하기
+    await cont.showMarkerInfoWindow(MarkerId(stationinfo[i].statId.toString()));
+  }
+
+  //네이게이션 연결
+  void openDialog() {
+    Get.dialog(
+      AlertDialog(
+        title: Container(
+            alignment: Alignment.center,
+            width: Get.size.width * 0.7,
+            // height: Get.size.height * 0.2,
+            child: Text('길안내 연결')),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            GestureDetector(
+                onTap: () async {
+                  Stationinfo temp = stationinfo[tap_num.value];
+                  if (!await launch(
+                      'https://apis.openapi.sk.com/tmap/app/routes?appKey=l7xx71089ab0fff0470e97ab985297aa1343&name=${temp.statNm}&lon=${temp.lng}&lat=${temp.lat}'))
+                    throw 'Could not launch https://flutter.dev';
+                },
+                child: Image.asset("assets/image/navi/tmap.PNG")),
+            GestureDetector(
+                onTap: () async {
+                  bool result = await NaviApi.instance.isKakaoNaviInstalled();
+
+                  if (result) {
+                    Stationinfo temp = stationinfo[tap_num.value];
+                    await NaviApi.instance.navigate(
+                      destination: Location(
+                          name: temp.statNm.toString(),
+                          x: temp.lng.toString(),
+                          y: temp.lat.toString()),
+                      option: NaviOption(coordType: CoordType.wgs84),
+                    );
+                  } else {
+                    // 카카오내비 설치 페이지로 이동
+                    launchBrowserTab(Uri.parse(NaviApi.webNaviInstall));
+                  }
+                },
+                child: Image.asset("assets/image/navi/kakaomap.PNG"))
+          ],
+        ),
+        actions: [
+          TextButton(
+            child: const Text("Close"),
+            onPressed: () => Get.back(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void test() {
+    stationinfo.clear();
+    //test
+    stationinfo.add(Stationinfo.fromJson({
+      "lat": 37.5515012548,
+      "lng": 126.9139520503,
+      "businId": "EV",
+      "businNm": "에버온",
+      "statId": "EV000122",
+      "statUpdDt": "20211030003310",
+      "stat": "9",
+      "statNm": "마포 메세나폴리스아파트",
+      "count": 9,
+      "addr": "서울특별시 마포구 양화로 45 (서교동, 메세나폴리스)",
+      "parkingFree": "24시간 이용가능,입주민만 사용가능 거주자외출입제한"
+    }));
+    stationinfo.add(Stationinfo.fromJson({
+      "lat": 37.547595313672,
+      "lng": 126.9365446997,
+      "businId": "EV",
+      "businNm": "에버온",
+      "statId": "EV002224",
+      "statUpdDt": "20211030094213",
+      "stat": "2",
+      "statNm": "서울마포 세양청마루아파트",
+      "count": 2,
+      "addr": "서울특별시 마포구 독막로 209",
+      "parkingFree": "24시간 이용가능,입주민만 사용가능 거주자외출입제한"
+    }));
+    stationinfo.add(Stationinfo.fromJson({
+      "lat": 37.548963,
+      "lng": 126.940205,
+      "businId": "HE",
+      "businNm": "한국전기차충전서비스",
+      "statId": "HE000757",
+      "statUpdDt": "20211029093505",
+      "stat": "2",
+      "statNm": "전기안전공사 서울지역본부",
+      "count": 1,
+      "addr": "서울특별시 마포구 백범로 73",
+      "parkingFree": "24시간 이용가능"
+    }));
+    stationinfo.add(Stationinfo.fromJson({
+      "lat": 37.5477360786,
+      "lng": 126.9320622462,
+      "businId": "PI",
+      "businNm": "차지비",
+      "statId": "PI000244",
+      "statUpdDt": "20211029234356",
+      "stat": "2",
+      "statNm": "서울시 서강동 주민센터",
+      "count": 1,
+      "addr": "서울특별시 마포구 독막로 165",
+      "parkingFree": "24시간 이용가능"
+    }));
+    stationinfo.add(Stationinfo.fromJson({
+      "lat": 37.5516149385,
+      "lng": 126.9117247826,
+      "businId": "PI",
+      "businNm": "차지비",
+      "statId": "PI000248",
+      "statUpdDt": "20211030143214",
+      "stat": "3",
+      "statNm": "서울시 합정동 주민센터",
+      "count": 1,
+      "addr": "서울특별시 마포구 월드컵로5길 11",
+      "parkingFree": "24시간 이용가능"
+    }));
+    stationinfo.add(Stationinfo.fromJson({
+      "lat": 37.5470727699,
+      "lng": 126.9456466563,
+      "businId": "PI",
+      "businNm": "차지비",
+      "statId": "EV000122",
+      "statUpdDt": "20211030052501",
+      "stat": "2",
+      "statNm": "서울시 염리동 주민센터",
+      "count": 1,
+      "addr": "서울특별시 마포구 숭문길 14",
+      "parkingFree": "24시간 이용가능"
+    }));
   }
 }

@@ -40,7 +40,7 @@ dependencies:
   google_sign_in: ^5.2.1
   firebase_auth: ^3.2.0
   flutter_naver_login: ^1.2.3
-  kakao_flutter_sdk: ^0.9.0
+  kakao_flutter_sdk: ^1.0.0
   shared_preferences: ^2.0.9
   flutter_secure_storage: ^5.0.2
   dio: ^4.0.4
@@ -53,6 +53,7 @@ dependencies:
   sliding_sheet: ^0.5.2
   sliding_up_panel: ^2.0.0+1
   url_launcher: ^6.0.20
+  flutter_native_splash: ^2.1.1
   
 dev_dependencies:
   flutter_test:
@@ -82,6 +83,7 @@ flutter:
     - assets/image/home/
     - assets/image/map/
     - assets/image/root/
+    - assets/image/navi/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

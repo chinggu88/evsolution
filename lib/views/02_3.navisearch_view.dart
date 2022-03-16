@@ -49,15 +49,99 @@ class Navisearch extends StatelessWidget {
             ),
             //경로상 충전소 위치
             Positioned(
-                bottom: Get.size.height * 0.01,
-                child: Opacity(
-                  opacity: 0.0,
-                  child: Container(
-                    width: Get.size.width,
-                    height: Get.size.width * 0.3,
-                    // color: Colors.red,
-                  ),
-                )),
+              bottom: Get.size.height * 0.047,
+              child: Opacity(
+                  opacity:
+                      Navicontroller.to.stationinfo.length == 0 ? 0.0 : 1.0,
+                  child: Obx(
+                    () {
+                      return Column(
+                        children: [
+                          Container(
+                              width: Get.size.width,
+                              height: Get.size.width * 0.3,
+                              child: ListView.builder(
+                                  padding: EdgeInsets.only(
+                                      left: Get.size.width * 0.04),
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount:
+                                      Navicontroller.to.stationinfo.length,
+                                  itemBuilder: (BuildContext context, int i) {
+                                    return Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navicontroller.to
+                                                .Taplist(i, mcontroller);
+                                          },
+                                          child: Container(
+                                            height: Get.size.height * 0.156,
+                                            width: Get.size.width * 0.428,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                color: Navicontroller
+                                                            .to.tap_num.value ==
+                                                        i
+                                                    ? Color(0xff00c2ff)
+                                                    : Color(0xffffffff),
+                                                width: 2,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(3),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Color(0x19000000),
+                                                  offset: Offset(0, 1),
+                                                  blurRadius: 4,
+                                                  spreadRadius: 0,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Text(Navicontroller
+                                                .to.stationinfo[i].statNm
+                                                .toString()),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        )
+                                      ],
+                                    );
+                                  })),
+                          SizedBox(
+                            height: Get.size.height * 0.018,
+                          ),
+                          GestureDetector(
+                            onTap: () => Navicontroller.to.openDialog(),
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: Get.size.height * 0.078,
+                              width: Get.size.width * 0.9,
+                              margin: EdgeInsets.only(
+                                left: 0.234,
+                                right: 0.234,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Color(0xffc4c4c4),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                '안내시작',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontFamily: 'Pretendard-Regular',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  )),
+            )
           ],
         );
       }),

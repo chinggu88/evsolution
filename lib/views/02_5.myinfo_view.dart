@@ -1,7 +1,7 @@
 import 'package:evsolution/controller/login_controller.dart';
 import 'package:evsolution/controller/stats_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:kakao_flutter_sdk/all.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Myinfo extends StatelessWidget {
@@ -49,6 +49,7 @@ class Myinfo extends StatelessWidget {
                   bool result = await NaviApi.instance.isKakaoNaviInstalled();
                   if (result) {
                     print('카카오내비 앱으로 길안내 가능');
+                    // NaviApi.instance.shareDestination(destination: destination)
                   } else {
                     print('카카오내비 미설치');
                     // 카카오내비 설치 페이지로 이동
