@@ -111,6 +111,6 @@
 		<key>kServiceAppUrlScheme</key>
 		<string>com.evsolution.smartcharging.evsolution</string>
 		<key>UIStatusBarHidden</key>
-		<true/>
+		<false/>
 	</dict>
 </plist>

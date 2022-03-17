@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:video_player/video_player.dart';
 
 class Logincontroller extends GetxController {
   static Logincontroller get to => Get.find();
@@ -20,11 +21,19 @@ class Logincontroller extends GetxController {
   var dio = Dio(BaseOptions(baseUrl: Statecontroller.to.serverUrl.value));
   //카카오톡 설치여부
   RxBool iskakaotalkInstalled = false.obs;
+  
+  //splash
+  late VideoPlayerController? controller;
+  late Future<void>? initialplayer;
+
   @override
   void onInit() async {
     super.onInit();
     getlogininfo();
     initKakaoTalkInstalled();
+    //splash
+    controller = VideoPlayerController.asset('assets/video/plash_home.mp4');
+    initialplayer = controller!.initialize();
   }
 
   // google login
@@ -185,7 +194,7 @@ class Logincontroller extends GetxController {
 
   //로그아웃시 로그인정보 리셋
   resetlogininfo() async {
-    // await storage.deleteAll();
+    await storage.deleteAll();
   }
 
   //자동로그인 설정
@@ -234,4 +243,6 @@ class Logincontroller extends GetxController {
       }
     }
   }
+
+
 }
