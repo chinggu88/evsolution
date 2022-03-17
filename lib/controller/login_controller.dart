@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:evsolution/controller/stats_controller.dart';
 import 'package:evsolution/model/userinfo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
@@ -25,6 +28,16 @@ class Logincontroller extends GetxController {
     super.onInit();
     getlogininfo();
     initKakaoTalkInstalled();
+
+    //splash tets
+     print('ready in 3...');
+    await Future.delayed(const Duration(seconds: 1));
+    print('ready in 2...');
+    await Future.delayed(const Duration(seconds: 1));
+    print('ready in 1...');
+    await Future.delayed(const Duration(seconds: 1));
+    print('go!');
+    FlutterNativeSplash.remove();
   }
 
   // google login
@@ -72,7 +85,6 @@ class Logincontroller extends GetxController {
       final NaverLoginResult result = await FlutterNaverLogin.logIn();
       final bool log = await FlutterNaverLogin.isLoggedIn;
 
-      print(result.account.name);
       NaverAccessToken token = await FlutterNaverLogin.currentAccessToken;
       if (result.account.email != null) {
         setlogininfo(
@@ -148,7 +160,10 @@ class Logincontroller extends GetxController {
   }
 
   //apple 로그인
-  Future<UserCredential> signInWithApple() async {
+  // Future<UserCredential> signInWithApple() async {
+    Future<void> signInWithApple() async {
+      log('apple login !');
+    
     final appleCredential = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
@@ -159,8 +174,19 @@ class Logincontroller extends GetxController {
     final oauthCredential = OAuthProvider("apple.com").credential(
       idToken: appleCredential.identityToken,
       accessToken: appleCredential.authorizationCode,
-    );
-    return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+    ); 
+
+    await FirebaseAuth.instance.signInWithCredential(oauthCredential).then((value) {
+      print(value.user!.displayName.toString());
+      setlogininfo(
+            value.user!.email.toString(), 'apple', value.credential!.token.toString());
+        insertlogininfoDB(
+            value.user!.email.toString(), 'apple', value.credential!.token.toString());
+    }).catchError((e){
+      print(e);
+    });
+
+    // return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
   }
 
   //최초로그인정보 저장 휴대폰 내부 저장소

@@ -53,8 +53,9 @@ dependencies:
   sliding_sheet: ^0.5.2
   sliding_up_panel: ^2.0.0+1
   url_launcher: ^6.0.20
-  flutter_native_splash: ^2.1.1
-  
+
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -65,6 +66,14 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+  flutter_native_splash: ^2.1.1
+
+flutter_native_splash:
+  image: assets/image/home/group_325.png
+  color: "#FFFFFF"
+  fullscreen: true
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
