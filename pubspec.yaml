@@ -66,15 +66,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
-  flutter_native_splash: ^2.1.1
-
-flutter_native_splash:
-  image: assets/image/home/group_325.png
-  color: "#FFFFFF"
-  fullscreen: true
-  android: true
-  ios: true
-
+  animated_splash_screen: ^1.2.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -93,6 +85,7 @@ flutter:
     - assets/image/map/
     - assets/image/root/
     - assets/image/navi/
+    - assets/video/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

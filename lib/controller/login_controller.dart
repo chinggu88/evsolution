@@ -1,13 +1,10 @@
-import 'dart:convert';
 import 'dart:developer';
 
-import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:evsolution/controller/stats_controller.dart';
 import 'package:evsolution/model/userinfo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
@@ -28,16 +25,6 @@ class Logincontroller extends GetxController {
     super.onInit();
     getlogininfo();
     initKakaoTalkInstalled();
-
-    //splash tets
-     print('ready in 3...');
-    await Future.delayed(const Duration(seconds: 1));
-    print('ready in 2...');
-    await Future.delayed(const Duration(seconds: 1));
-    print('ready in 1...');
-    await Future.delayed(const Duration(seconds: 1));
-    print('go!');
-    FlutterNativeSplash.remove();
   }
 
   // google login
