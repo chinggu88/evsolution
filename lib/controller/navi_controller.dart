@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:dio/dio.dart';
-import 'package:evsolution/model/juso.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -459,7 +458,6 @@ class Navicontroller extends GetxController {
       "addr": "서울특별시 마포구 숭문길 14",
       "parkingFree": "24시간 이용가능"
     }));
-    print("----------------------------------${stationinfo.length}");
     //마커추가
     stationinfo.forEach((e) {
       naviMarker.add(Marker(

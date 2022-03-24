@@ -28,11 +28,7 @@ class Mapcontroller extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    //현제위치
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    currentPostion(LatLng(position.latitude, position.longitude));
-    print('currentPostion ${currentPostion}');
+    setlocation();
   }
 
   @override
@@ -41,6 +37,14 @@ class Mapcontroller extends GetxController {
     evMarker.clear();
     stationinfo.clear();
     evinfo.clear();
+  }
+
+  //현재위치로 셋팅
+  setlocation() async {
+    //현제위치
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    currentPostion(LatLng(position.latitude, position.longitude));
   }
 
   //화면이동
@@ -65,7 +69,7 @@ class Mapcontroller extends GetxController {
         //1.기존마커리스트에서 새로운 마커리스트와 겹치지 않는 마커 지우기
         int evindex = 0;
         Set<String> rmindex = {};
-        print('1 : evMarker foreach start');
+
         evMarker.forEach((ev) {
           bool chk = true;
           stationinfo.forEach((station) {
@@ -79,7 +83,7 @@ class Mapcontroller extends GetxController {
           evindex++;
         });
         //삭제
-        print('2 : rmindex foreach start');
+
         rmindex.forEach((e) {
           // evMarker.remove(e);
           evMarker.removeWhere((element) => element.markerId.value == e);
@@ -88,7 +92,7 @@ class Mapcontroller extends GetxController {
         //2.새로운마커리스트에서 기존마커리스트와 중복되지 않는 리스트 마커 그리기
         int stationindex = 0;
         Set<Stationinfo> tempstation = <Stationinfo>{};
-        print('3 : stationinfo foreach start');
+
         stationinfo.forEach((e) {
           bool chk = true;
           evMarker.forEach((ev) async {
@@ -101,7 +105,7 @@ class Mapcontroller extends GetxController {
           }
         });
         //추가
-        print('4 : tempstation foreach start');
+
         tempstation.forEach((e) async {
           switch (e.count) {
             case 0:

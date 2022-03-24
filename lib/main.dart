@@ -3,6 +3,7 @@ import 'package:evsolution/views/02_0.root_view.dart';
 import 'package:evsolution/views/02_2.map_view.dart';
 import 'package:evsolution/views/02_3.navisearch_view.dart';
 import 'package:evsolution/views/03_faultreport_view.dart';
+import 'package:evsolution/views/05_1.setting_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,7 @@ void main() async {
       GetPage(name: "/freport", page: () => Faultreport()),
       GetPage(name: "/Map", page: () => map()),
       GetPage(name: "/Navi", page: () => Navisearch()),
+      GetPage(name: "/setting", page: () => setting()),
     ],
   ));
 }

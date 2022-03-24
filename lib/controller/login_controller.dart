@@ -172,8 +172,8 @@ class Logincontroller extends GetxController {
       accessToken: appleCredential.authorizationCode,
     ); 
 
-    await FirebaseAuth.instance.signInWithCredential(oauthCredential).then((value) {
-      print(value.user!.displayName.toString());
+     FirebaseAuth.instance.signInWithCredential(oauthCredential).then((value) {
+
       setlogininfo(
             value.user!.email.toString(), 'apple', value.credential!.token.toString());
         insertlogininfoDB(
@@ -184,6 +184,7 @@ class Logincontroller extends GetxController {
 
     // return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
   }
+  //apple logout
 
   //최초로그인정보 저장 휴대폰 내부 저장소
   setlogininfo(String id, String kind, String token) async {

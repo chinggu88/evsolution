@@ -9,11 +9,12 @@ import 'package:get/get.dart';
 class Init extends Bindings {
   @override
   void dependencies() {
-    Get.put(Statecontroller());
+    Get.put(Statecontroller(),permanent:true);
+    // Get.put(Rootcontroller(),permanent:true);
+    Get.lazyPut(() => Rootcontroller());
     Get.put(Logincontroller());
-    Get.put(Rootcontroller());
-    Get.put(Mapcontroller());
+    Get.lazyPut(() => Mapcontroller());
     Get.lazyPut(() => Navicontroller());
-    Get.lazyPut(() => Freportcontroller());
+    Get.lazyPut(() => Freport_controller());
   }
 }

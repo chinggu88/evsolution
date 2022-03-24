@@ -54,6 +54,7 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   url_launcher: ^6.0.20
   video_player: ^2.3.0
+  permission_handler: ^9.2.0
 
 
 dev_dependencies:
