@@ -112,5 +112,10 @@
 		<string>com.evsolution.smartcharging.evsolution</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
+
+		<!-- Permission options for the `mediaLibrary` group -->
+    <key>NSCalendarsUsageDescription</key>
+    <string>calendar!</string>
+
 	</dict>
 </plist>
