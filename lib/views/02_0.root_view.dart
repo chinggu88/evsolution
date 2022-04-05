@@ -14,39 +14,10 @@ class Root extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       return Scaffold(
-        // appBar: setAppbar(),
         body: setbody(),
         bottomNavigationBar: setNavigator(),
       );
     });
-  }
-
-  PreferredSizeWidget setAppbar() {
-    String viewname = '';
-    switch (RouteName.values[Rootcontroller.to.currentIndex.value]) {
-      case RouteName.home:
-        viewname = 'Home_View';
-
-        break;
-      case RouteName.uselist:
-        viewname = 'uselist';
-
-        break;
-      case RouteName.navisearch:
-        viewname = 'favorite';
-
-        break;
-      case RouteName.myinfo:
-        viewname = 'myinfo';
-
-        break;
-      case RouteName.map:
-        viewname = 'map';
-        break;
-    }
-    return AppBar(
-      title: Text(viewname),
-    );
   }
 
   Widget setbody() {

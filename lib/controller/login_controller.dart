@@ -21,7 +21,7 @@ class Logincontroller extends GetxController {
   var dio = Dio(BaseOptions(baseUrl: Statecontroller.to.serverUrl.value));
   //카카오톡 설치여부
   RxBool iskakaotalkInstalled = false.obs;
-  
+
   //splash
   late VideoPlayerController? controller;
   late Future<void>? initialplayer;
@@ -157,9 +157,9 @@ class Logincontroller extends GetxController {
 
   //apple 로그인
   // Future<UserCredential> signInWithApple() async {
-    Future<void> signInWithApple() async {
-      log('apple login !');
-    
+  Future<void> signInWithApple() async {
+    log('apple login !');
+
     final appleCredential = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
@@ -170,15 +170,14 @@ class Logincontroller extends GetxController {
     final oauthCredential = OAuthProvider("apple.com").credential(
       idToken: appleCredential.identityToken,
       accessToken: appleCredential.authorizationCode,
-    ); 
+    );
 
-     FirebaseAuth.instance.signInWithCredential(oauthCredential).then((value) {
-
-      setlogininfo(
-            value.user!.email.toString(), 'apple', value.credential!.token.toString());
-        insertlogininfoDB(
-            value.user!.email.toString(), 'apple', value.credential!.token.toString());
-    }).catchError((e){
+    FirebaseAuth.instance.signInWithCredential(oauthCredential).then((value) {
+      setlogininfo(value.user!.email.toString(), 'apple',
+          value.credential!.token.toString());
+      insertlogininfoDB(value.user!.email.toString(), 'apple',
+          value.credential!.token.toString());
+    }).catchError((e) {
       print(e);
     });
 
@@ -208,7 +207,7 @@ class Logincontroller extends GetxController {
         'id': userInfo['id'].toString(),
         'kind': userInfo['kind'].toString()
       });
-      print(response.data);
+
       if (response.statusCode == 200) {
         info = (response.data).map<Userinfo>((json) {
           return Userinfo.fromJson(json);
@@ -244,6 +243,4 @@ class Logincontroller extends GetxController {
       }
     }
   }
-
-
 }

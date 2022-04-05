@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:dio/dio.dart';
+import 'package:evsolution/model/juso.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -27,7 +28,7 @@ class Navicontroller extends GetxController {
   TextEditingController endcontroller = new TextEditingController();
   SheetController sc = SheetController();
 
-  final currentPostion = LatLng(37.56356428218978, 126.97377552185294).obs;
+  final currentPostion = LatLng(0.0, 0.0).obs;
   //출발지검색히스토리
   RxList<DoroJuso> jusoliststart = <DoroJuso>[].obs;
   //도착지검색히스토리
@@ -39,9 +40,10 @@ class Navicontroller extends GetxController {
   RxSet<Polyline> routerlist = <Polyline>{}.obs;
   //경로상 충전기 리스트
   List<Stationinfo> stationinfo = <Stationinfo>[].obs;
-  //경로상 충전기 탭 번호
+  //경로상 충전기 탭 번호+
   RxInt tap_num = (-1).obs;
   final storage = new FlutterSecureStorage();
+
   RxList<String> searchliststart = <String>[].obs;
   RxList<String> searchlistend = <String>[].obs;
 
@@ -347,11 +349,13 @@ class Navicontroller extends GetxController {
     // - 16: 일반도로
     // - 20: 번화가링크
     int index = 0;
+    List te = [];
     for (var v in mp) {
       Color color = Colors.red;
       List<LatLng> points = [];
       v.coordinates?.forEach((e) {
         points.add(LatLng(e.latitude, e.longitude));
+        te.add([e.latitude, e.longitude]);
       });
 
       if (v.roadType == 0) {
@@ -379,85 +383,16 @@ class Navicontroller extends GetxController {
     final cont = await mcontroller.future;
     cont.animateCamera(CameraUpdate.newLatLngBounds(bound, 100));
 
-    //test
-    stationinfo.add(Stationinfo.fromJson({
-      "lat": 37.5515012548,
-      "lng": 126.9139520503,
-      "businId": "EV",
-      "businNm": "에버온",
-      "statId": "EV000122",
-      "statUpdDt": "20211030003310",
-      "stat": "9",
-      "statNm": "마포 메세나폴리스아파트",
-      "count": 9,
-      "addr": "서울특별시 마포구 양화로 45 (서교동, 메세나폴리스)",
-      "parkingFree": "24시간 이용가능,입주민만 사용가능 거주자외출입제한"
-    }));
-    stationinfo.add(Stationinfo.fromJson({
-      "lat": 37.547595313672,
-      "lng": 126.9365446997,
-      "businId": "EV",
-      "businNm": "에버온",
-      "statId": "EV002224",
-      "statUpdDt": "20211030094213",
-      "stat": "2",
-      "statNm": "서울마포 세양청마루아파트",
-      "count": 2,
-      "addr": "서울특별시 마포구 독막로 209",
-      "parkingFree": "24시간 이용가능,입주민만 사용가능 거주자외출입제한"
-    }));
-    stationinfo.add(Stationinfo.fromJson({
-      "lat": 37.548963,
-      "lng": 126.940205,
-      "businId": "HE",
-      "businNm": "한국전기차충전서비스",
-      "statId": "HE000757",
-      "statUpdDt": "20211029093505",
-      "stat": "2",
-      "statNm": "전기안전공사 서울지역본부",
-      "count": 1,
-      "addr": "서울특별시 마포구 백범로 73",
-      "parkingFree": "24시간 이용가능"
-    }));
-    stationinfo.add(Stationinfo.fromJson({
-      "lat": 37.5477360786,
-      "lng": 126.9320622462,
-      "businId": "PI",
-      "businNm": "차지비",
-      "statId": "PI000244",
-      "statUpdDt": "20211029234356",
-      "stat": "2",
-      "statNm": "서울시 서강동 주민센터",
-      "count": 1,
-      "addr": "서울특별시 마포구 독막로 165",
-      "parkingFree": "24시간 이용가능"
-    }));
-    stationinfo.add(Stationinfo.fromJson({
-      "lat": 37.5516149385,
-      "lng": 126.9117247826,
-      "businId": "PI",
-      "businNm": "차지비",
-      "statId": "PI000248",
-      "statUpdDt": "20211030143214",
-      "stat": "3",
-      "statNm": "서울시 합정동 주민센터",
-      "count": 1,
-      "addr": "서울특별시 마포구 월드컵로5길 11",
-      "parkingFree": "24시간 이용가능"
-    }));
-    stationinfo.add(Stationinfo.fromJson({
-      "lat": 37.5470727699,
-      "lng": 126.9456466563,
-      "businId": "PI",
-      "businNm": "차지비",
-      "statId": "EV000122",
-      "statUpdDt": "20211030052501",
-      "stat": "2",
-      "statNm": "서울시 염리동 주민센터",
-      "count": 1,
-      "addr": "서울특별시 마포구 숭문길 14",
-      "parkingFree": "24시간 이용가능"
-    }));
+    response = await dio.post('/station/recommend', data: {
+      'route': te,
+      'distance': 0.01,
+    });
+
+    if (response.statusCode == 200) {
+      stationinfo = (response.data['data']).map<Stationinfo>((json) {
+        return Stationinfo.fromJson(json);
+      }).toList();
+    }
     //마커추가
     stationinfo.forEach((e) {
       naviMarker.add(Marker(
@@ -602,7 +537,7 @@ class Navicontroller extends GetxController {
     //클릭 index
     tap_num(i);
     //리스트 다시 그리기
-    test();
+
     //클릭한 목록으로 화면 이동
     if (!mcontroller.isCompleted) return;
     final cont = await mcontroller.future;
@@ -667,88 +602,5 @@ class Navicontroller extends GetxController {
         ],
       ),
     );
-  }
-
-  void test() {
-    stationinfo.clear();
-    //test
-    stationinfo.add(Stationinfo.fromJson({
-      "lat": 37.5515012548,
-      "lng": 126.9139520503,
-      "businId": "EV",
-      "businNm": "에버온",
-      "statId": "EV000122",
-      "statUpdDt": "20211030003310",
-      "stat": "9",
-      "statNm": "마포 메세나폴리스아파트",
-      "count": 9,
-      "addr": "서울특별시 마포구 양화로 45 (서교동, 메세나폴리스)",
-      "parkingFree": "24시간 이용가능,입주민만 사용가능 거주자외출입제한"
-    }));
-    stationinfo.add(Stationinfo.fromJson({
-      "lat": 37.547595313672,
-      "lng": 126.9365446997,
-      "businId": "EV",
-      "businNm": "에버온",
-      "statId": "EV002224",
-      "statUpdDt": "20211030094213",
-      "stat": "2",
-      "statNm": "서울마포 세양청마루아파트",
-      "count": 2,
-      "addr": "서울특별시 마포구 독막로 209",
-      "parkingFree": "24시간 이용가능,입주민만 사용가능 거주자외출입제한"
-    }));
-    stationinfo.add(Stationinfo.fromJson({
-      "lat": 37.548963,
-      "lng": 126.940205,
-      "businId": "HE",
-      "businNm": "한국전기차충전서비스",
-      "statId": "HE000757",
-      "statUpdDt": "20211029093505",
-      "stat": "2",
-      "statNm": "전기안전공사 서울지역본부",
-      "count": 1,
-      "addr": "서울특별시 마포구 백범로 73",
-      "parkingFree": "24시간 이용가능"
-    }));
-    stationinfo.add(Stationinfo.fromJson({
-      "lat": 37.5477360786,
-      "lng": 126.9320622462,
-      "businId": "PI",
-      "businNm": "차지비",
-      "statId": "PI000244",
-      "statUpdDt": "20211029234356",
-      "stat": "2",
-      "statNm": "서울시 서강동 주민센터",
-      "count": 1,
-      "addr": "서울특별시 마포구 독막로 165",
-      "parkingFree": "24시간 이용가능"
-    }));
-    stationinfo.add(Stationinfo.fromJson({
-      "lat": 37.5516149385,
-      "lng": 126.9117247826,
-      "businId": "PI",
-      "businNm": "차지비",
-      "statId": "PI000248",
-      "statUpdDt": "20211030143214",
-      "stat": "3",
-      "statNm": "서울시 합정동 주민센터",
-      "count": 1,
-      "addr": "서울특별시 마포구 월드컵로5길 11",
-      "parkingFree": "24시간 이용가능"
-    }));
-    stationinfo.add(Stationinfo.fromJson({
-      "lat": 37.5470727699,
-      "lng": 126.9456466563,
-      "businId": "PI",
-      "businNm": "차지비",
-      "statId": "EV000122",
-      "statUpdDt": "20211030052501",
-      "stat": "2",
-      "statNm": "서울시 염리동 주민센터",
-      "count": 1,
-      "addr": "서울특별시 마포구 숭문길 14",
-      "parkingFree": "24시간 이용가능"
-    }));
   }
 }

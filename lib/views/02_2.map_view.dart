@@ -32,14 +32,16 @@ class map extends StatelessWidget {
                 ),
                 onMapCreated: (GoogleMapController controller) async {
                   gcontroller.complete(controller);
-
+                  //현제위치
+                  Position position = await Geolocator.getCurrentPosition(
+                      desiredAccuracy: LocationAccuracy.high);
                   // final cont = await gcontroller.future;
                   // cont.moveCamera(cameraUpdate)
                   // cont.animateCamera(CameraUpdate.newCameraPosition(
                   controller.moveCamera(CameraUpdate.newCameraPosition(
                     CameraPosition(
                       bearing: 0,
-                      target: Mapcontroller.to.currentPostion.value,
+                      target: LatLng(position.latitude, position.longitude),
                       zoom: 14.0,
                     ),
                   ));

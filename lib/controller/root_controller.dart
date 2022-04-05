@@ -11,15 +11,18 @@ class Rootcontroller extends GetxController {
   RxInt currentIndex = 0.obs;
   RxString currentView = 'Home'.obs;
   //권한목록
-  List<Permission> permission = [Permission.location,Permission.bluetooth,Permission.camera];
+  List<Permission> permission = [
+    Permission.location,
+    Permission.bluetooth,
+    Permission.camera
+  ];
   @override
-  void onInit() async{
+  void onInit() async {
     // TODO: implement onInit
     super.onInit();
     //권한설정
-    _handlePermission();
   }
-  
+
   void changeIndex(int index) {
     currentIndex(index);
     switch (index) {
@@ -33,22 +36,4 @@ class Rootcontroller extends GetxController {
         break;
     }
   }
-
-  Future<void> _handlePermission() async {
-    //권한확인
-    // permission.forEach((element) async {
-    //   element.isGranted.then((value) => print(value));
-    //   if(!await element.isGranted){
-    //     print(element);
-    //     await element.request();
-    //   }
-    //  });
-    // if(!await Permission.location.isGranted){
-    //   await Permission.location.request();
-    // }
-    Map<Permission, PermissionStatus> statues =await [Permission.storage].request();
-    print(statues);
-  }
-
-
 }

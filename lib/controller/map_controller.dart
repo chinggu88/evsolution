@@ -49,19 +49,22 @@ class Mapcontroller extends GetxController {
 
   //화면이동
   void onCameraIdle(Completer<GoogleMapController> gcontroller) async {
+    print("-------------------------------------------------");
     var response;
     if (!gcontroller.isCompleted) return;
     final cont = await gcontroller.future;
     LatLngBounds ragion = await cont.getVisibleRegion();
+
     if (ragion != null) {
-      response = await dio.post('/station/evstation', data: {
-        'minx': ragion.northeast.latitude.toString(),
+      response = await dio.post('/search/evstation', data: {
+        'minx': ragion.southwest.latitude.toString(),
         'miny': ragion.southwest.longitude.toString(),
-        'maxx': ragion.southwest.latitude.toString(),
+        'maxx': ragion.northeast.latitude.toString(),
         'maxy': ragion.northeast.longitude.toString()
       });
+
       if (response.statusCode == 200) {
-        stationinfo = (response.data).map<Stationinfo>((json) {
+        stationinfo = (response.data['data']).map<Stationinfo>((json) {
           return Stationinfo.fromJson(json);
         }).toList();
 
@@ -107,7 +110,7 @@ class Mapcontroller extends GetxController {
         //추가
 
         tempstation.forEach((e) async {
-          switch (e.count) {
+          switch (0) {
             case 0:
               await getBytesFromAsset('assets/image/map/0.png', 100).then(
                   (value) => evMarker.add(Marker(
@@ -212,106 +215,106 @@ class Mapcontroller extends GetxController {
 
   //마커 초기 셋팅
   setMarker() {
-    stationinfo.forEach((e) async {
-      switch (e.count) {
-        case 0:
-          await getBytesFromAsset('assets/image/map/0.png', 100).then((value) =>
-              evMarker.add(Marker(
-                  markerId: MarkerId(e.statId.toString()),
-                  position: LatLng(e.lat!, e.lng!),
-                  icon: BitmapDescriptor.fromBytes(value),
-                  onTap: () => markertap(e))));
-          break;
-        case 1:
-          await getBytesFromAsset('assets/image/map/1.png', 100).then((value) =>
-              evMarker.add(Marker(
-                  markerId: MarkerId(e.statId.toString()),
-                  position: LatLng(e.lat!, e.lng!),
-                  icon: BitmapDescriptor.fromBytes(value),
-                  onTap: () => markertap(e))));
-          break;
-        case 2:
-          await getBytesFromAsset('assets/image/map/2.png', 100).then((value) =>
-              evMarker.add(Marker(
-                  markerId: MarkerId(e.statId.toString()),
-                  position: LatLng(e.lat!, e.lng!),
-                  icon: BitmapDescriptor.fromBytes(value),
-                  onTap: () => markertap(e))));
-          break;
-        case 3:
-          await getBytesFromAsset('assets/image/map/3.png', 100).then((value) =>
-              evMarker.add(Marker(
-                  markerId: MarkerId(e.statId.toString()),
-                  position: LatLng(e.lat!, e.lng!),
-                  icon: BitmapDescriptor.fromBytes(value),
-                  onTap: () => markertap(e))));
-          break;
-        case 4:
-          await getBytesFromAsset('assets/image/map/4.png', 100).then((value) =>
-              evMarker.add(Marker(
-                  markerId: MarkerId(e.statId.toString()),
-                  position: LatLng(e.lat!, e.lng!),
-                  icon: BitmapDescriptor.fromBytes(value),
-                  onTap: () => markertap(e))));
-          break;
-        case 5:
-          await getBytesFromAsset('assets/image/map/5.png', 100).then((value) =>
-              evMarker.add(Marker(
-                  markerId: MarkerId(e.statId.toString()),
-                  position: LatLng(e.lat!, e.lng!),
-                  icon: BitmapDescriptor.fromBytes(value),
-                  onTap: () => markertap(e))));
-          break;
-        case 6:
-          await getBytesFromAsset('assets/image/map/6.png', 100).then((value) =>
-              evMarker.add(Marker(
-                  markerId: MarkerId(e.statId.toString()),
-                  position: LatLng(e.lat!, e.lng!),
-                  icon: BitmapDescriptor.fromBytes(value),
-                  onTap: () => markertap(e))));
-          break;
-        case 7:
-          await getBytesFromAsset('assets/image/map/7.png', 100).then((value) =>
-              evMarker.add(Marker(
-                  markerId: MarkerId(e.statId.toString()),
-                  position: LatLng(e.lat!, e.lng!),
-                  icon: BitmapDescriptor.fromBytes(value),
-                  onTap: () => markertap(e))));
-          break;
-        case 8:
-          await getBytesFromAsset('assets/image/map/8.png', 100).then((value) =>
-              evMarker.add(Marker(
-                  markerId: MarkerId(e.statId.toString()),
-                  position: LatLng(e.lat!, e.lng!),
-                  icon: BitmapDescriptor.fromBytes(value),
-                  onTap: () => markertap(e))));
-          break;
-        case 9:
-          await getBytesFromAsset('assets/image/map/9.png', 100).then((value) =>
-              evMarker.add(Marker(
-                  markerId: MarkerId(e.statId.toString()),
-                  position: LatLng(e.lat!, e.lng!),
-                  icon: BitmapDescriptor.fromBytes(value),
-                  onTap: () => markertap(e))));
-          break;
-        case 10:
-          await getBytesFromAsset('assets/image/map/10.png', 100).then(
-              (value) => evMarker.add(Marker(
-                  markerId: MarkerId(e.statId.toString()),
-                  position: LatLng(e.lat!, e.lng!),
-                  icon: BitmapDescriptor.fromBytes(value),
-                  onTap: () => markertap(e))));
-          break;
-        default:
-          await getBytesFromAsset('assets/image/map/0.png', 100).then((value) =>
-              evMarker.add(Marker(
-                  markerId: MarkerId(e.statId.toString()),
-                  position: LatLng(e.lat!, e.lng!),
-                  icon: BitmapDescriptor.fromBytes(value),
-                  onTap: () => markertap(e))));
-          break;
-      }
-    });
+    // stationinfo.forEach((e) async {
+    //   switch (e.count) {
+    //     case 0:
+    //       await getBytesFromAsset('assets/image/map/0.png', 100).then((value) =>
+    //           evMarker.add(Marker(
+    //               markerId: MarkerId(e.statId.toString()),
+    //               position: LatLng(e.lat!, e.lng!),
+    //               icon: BitmapDescriptor.fromBytes(value),
+    //               onTap: () => markertap(e))));
+    //       break;
+    //     case 1:
+    //       await getBytesFromAsset('assets/image/map/1.png', 100).then((value) =>
+    //           evMarker.add(Marker(
+    //               markerId: MarkerId(e.statId.toString()),
+    //               position: LatLng(e.lat!, e.lng!),
+    //               icon: BitmapDescriptor.fromBytes(value),
+    //               onTap: () => markertap(e))));
+    //       break;
+    //     case 2:
+    //       await getBytesFromAsset('assets/image/map/2.png', 100).then((value) =>
+    //           evMarker.add(Marker(
+    //               markerId: MarkerId(e.statId.toString()),
+    //               position: LatLng(e.lat!, e.lng!),
+    //               icon: BitmapDescriptor.fromBytes(value),
+    //               onTap: () => markertap(e))));
+    //       break;
+    //     case 3:
+    //       await getBytesFromAsset('assets/image/map/3.png', 100).then((value) =>
+    //           evMarker.add(Marker(
+    //               markerId: MarkerId(e.statId.toString()),
+    //               position: LatLng(e.lat!, e.lng!),
+    //               icon: BitmapDescriptor.fromBytes(value),
+    //               onTap: () => markertap(e))));
+    //       break;
+    //     case 4:
+    //       await getBytesFromAsset('assets/image/map/4.png', 100).then((value) =>
+    //           evMarker.add(Marker(
+    //               markerId: MarkerId(e.statId.toString()),
+    //               position: LatLng(e.lat!, e.lng!),
+    //               icon: BitmapDescriptor.fromBytes(value),
+    //               onTap: () => markertap(e))));
+    //       break;
+    //     case 5:
+    //       await getBytesFromAsset('assets/image/map/5.png', 100).then((value) =>
+    //           evMarker.add(Marker(
+    //               markerId: MarkerId(e.statId.toString()),
+    //               position: LatLng(e.lat!, e.lng!),
+    //               icon: BitmapDescriptor.fromBytes(value),
+    //               onTap: () => markertap(e))));
+    //       break;
+    //     case 6:
+    //       await getBytesFromAsset('assets/image/map/6.png', 100).then((value) =>
+    //           evMarker.add(Marker(
+    //               markerId: MarkerId(e.statId.toString()),
+    //               position: LatLng(e.lat!, e.lng!),
+    //               icon: BitmapDescriptor.fromBytes(value),
+    //               onTap: () => markertap(e))));
+    //       break;
+    //     case 7:
+    //       await getBytesFromAsset('assets/image/map/7.png', 100).then((value) =>
+    //           evMarker.add(Marker(
+    //               markerId: MarkerId(e.statId.toString()),
+    //               position: LatLng(e.lat!, e.lng!),
+    //               icon: BitmapDescriptor.fromBytes(value),
+    //               onTap: () => markertap(e))));
+    //       break;
+    //     case 8:
+    //       await getBytesFromAsset('assets/image/map/8.png', 100).then((value) =>
+    //           evMarker.add(Marker(
+    //               markerId: MarkerId(e.statId.toString()),
+    //               position: LatLng(e.lat!, e.lng!),
+    //               icon: BitmapDescriptor.fromBytes(value),
+    //               onTap: () => markertap(e))));
+    //       break;
+    //     case 9:
+    //       await getBytesFromAsset('assets/image/map/9.png', 100).then((value) =>
+    //           evMarker.add(Marker(
+    //               markerId: MarkerId(e.statId.toString()),
+    //               position: LatLng(e.lat!, e.lng!),
+    //               icon: BitmapDescriptor.fromBytes(value),
+    //               onTap: () => markertap(e))));
+    //       break;
+    //     case 10:
+    //       await getBytesFromAsset('assets/image/map/10.png', 100).then(
+    //           (value) => evMarker.add(Marker(
+    //               markerId: MarkerId(e.statId.toString()),
+    //               position: LatLng(e.lat!, e.lng!),
+    //               icon: BitmapDescriptor.fromBytes(value),
+    //               onTap: () => markertap(e))));
+    //       break;
+    //     default:
+    //       await getBytesFromAsset('assets/image/map/0.png', 100).then((value) =>
+    //           evMarker.add(Marker(
+    //               markerId: MarkerId(e.statId.toString()),
+    //               position: LatLng(e.lat!, e.lng!),
+    //               icon: BitmapDescriptor.fromBytes(value),
+    //               onTap: () => markertap(e))));
+    //       break;
+    //   }
+    // });
   }
 
   markertap(Stationinfo e) async {

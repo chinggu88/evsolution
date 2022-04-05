@@ -8,39 +8,30 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xfff6f6f6),
+          elevation: 0,
+          leading: Image.asset('assets/image/home/group_325.png'),
+          title: Text('마이차져',
+              style: TextStyle(
+                fontFamily: 'Pretendard',
+                color: Color(0xff000000),
+                fontSize: 25,
+                fontWeight: FontWeight.w500,
+                fontStyle: FontStyle.normal,
+              )),
+          actions: [
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              width: Get.size.width * 0.061,
+              height: Get.size.height * 0.034,
+              child: SvgPicture.asset('assets/image/home/notification.svg'),
+            )
+          ],
+        ),
         backgroundColor: Color(0xfff6f6f6),
         body: Column(
           children: [
-            SizedBox(height: Get.size.height * 0.04),
-            Container(
-              height: Get.size.height * 0.08,
-              child: Row(
-                children: [
-                  // SvgPicture.asset('assets/image/home/home_logo.svg'),
-                  Image.asset('assets/image/home/group_325.png'),
-                  Text('마이차져',
-                      style: TextStyle(
-                        // foreground: Paint()
-                        //   ..shader = ui.Gradient.linear(const Offset(0, 20),
-                        //       Offset(150, 20), [Colors.red, Colors.yellow]),
-                        fontFamily: 'Pretendard',
-                        color: Color(0xff000000),
-                        fontSize: 25,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.normal,
-                      )),
-                  SizedBox(
-                    width: Get.size.width * 0.5,
-                  ),
-                  Container(
-                    width: Get.size.width * 0.061,
-                    height: Get.size.height * 0.034,
-                    child:
-                        SvgPicture.asset('assets/image/home/notification.svg'),
-                  )
-                ],
-              ),
-            ),
             SizedBox(height: Get.size.height * 0.026),
             Container(
               height: Get.size.height * 0.097,

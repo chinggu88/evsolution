@@ -1,5 +1,6 @@
 import 'package:evsolution/controller/login_controller.dart';
 import 'package:evsolution/controller/stats_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -11,15 +12,19 @@ class Myinfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Center(
+          child: Text(
+            '마이페이지',
+            style: TextStyle(color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: Column(
         children: [
-          SizedBox(
-            height: Get.size.height * 0.05,
-          ),
-          Container(
-            alignment: Alignment.center,
-            child: Text("마이페이지"),
-          ),
           SizedBox(
             height: Get.size.height * 0.1,
             child: Row(
@@ -30,10 +35,12 @@ class Myinfo extends StatelessWidget {
                 ),
                 SizedBox(width: Get.size.width * 0.8, child: const Text("앱설정")),
                 GestureDetector(
-                  onTap: ()=>Get.dialog(const Text('test1)')),
+                  onTap: () => Get.toNamed('/setting'),
                   child: SizedBox(
                       width: Get.size.width * 0.15,
-                      child: const Icon(Icons.arrow_forward_ios)),
+                      child: Container(
+                          margin: const EdgeInsets.all(20),
+                          child: const Icon(Icons.arrow_forward_ios))),
                 ),
               ],
             ),
@@ -48,7 +55,9 @@ class Myinfo extends StatelessWidget {
                   SizedBox(
                     width: Get.size.width * 0.05,
                   ),
-                  SizedBox(width: Get.size.width * 0.8, child: const Text("마이차저 설정")),
+                  SizedBox(
+                      width: Get.size.width * 0.8,
+                      child: const Text("마이차저 설정")),
                   SizedBox(
                       width: Get.size.width * 0.15,
                       child: const Icon(Icons.arrow_forward_ios)),

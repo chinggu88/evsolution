@@ -74,34 +74,36 @@ class Navisearch extends StatelessWidget {
                                             Navicontroller.to
                                                 .Taplist(i, mcontroller);
                                           },
-                                          child: Container(
-                                            height: Get.size.height * 0.156,
-                                            width: Get.size.width * 0.428,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              border: Border.all(
-                                                color: Navicontroller
-                                                            .to.tap_num.value ==
-                                                        i
-                                                    ? Color(0xff00c2ff)
-                                                    : Color(0xffffffff),
-                                                width: 2,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(3),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Color(0x19000000),
-                                                  offset: Offset(0, 1),
-                                                  blurRadius: 4,
-                                                  spreadRadius: 0,
+                                          child: Obx(() {
+                                            return Container(
+                                              height: Get.size.height * 0.156,
+                                              width: Get.size.width * 0.428,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  color: Navicontroller.to
+                                                              .tap_num.value ==
+                                                          i
+                                                      ? Color(0xff00c2ff)
+                                                      : Color(0xffffffff),
+                                                  width: 2,
                                                 ),
-                                              ],
-                                            ),
-                                            child: Text(Navicontroller
-                                                .to.stationinfo[i].statNm
-                                                .toString()),
-                                          ),
+                                                borderRadius:
+                                                    BorderRadius.circular(3),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Color(0x19000000),
+                                                    offset: Offset(0, 1),
+                                                    blurRadius: 4,
+                                                    spreadRadius: 0,
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Text(Navicontroller
+                                                  .to.stationinfo[i].statNm
+                                                  .toString()),
+                                            );
+                                          }),
                                         ),
                                         SizedBox(
                                           width: 10,
