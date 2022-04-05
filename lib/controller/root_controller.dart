@@ -1,6 +1,5 @@
 import 'package:evsolution/controller/map_controller.dart';
 import 'package:evsolution/controller/navi_controller.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -18,9 +17,9 @@ class Rootcontroller extends GetxController {
   ];
   @override
   void onInit() async {
-    // TODO: implement onInit
     super.onInit();
     //권한설정
+    _handlePermission();
   }
 
   void changeIndex(int index) {
@@ -35,5 +34,14 @@ class Rootcontroller extends GetxController {
         Navicontroller.to.oninit();
         break;
     }
+  }
+
+  Future<void> _handlePermission() async {
+    //권한확인
+    permission.forEach((element) async {
+      if (!await element.isGranted) {
+        await element.request();
+      }
+    });
   }
 }

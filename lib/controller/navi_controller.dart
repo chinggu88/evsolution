@@ -385,7 +385,7 @@ class Navicontroller extends GetxController {
 
     response = await dio.post('/station/recommend', data: {
       'route': te,
-      'distance': 0.01,
+      'distance': 0.1,
     });
 
     if (response.statusCode == 200) {

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -183,7 +184,14 @@ class Logincontroller extends GetxController {
 
     // return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
   }
+
   //apple logout
+  Future<void> signOutWithApple() async {
+    Statecontroller.to.loginType('');
+    Statecontroller.to.loginId('');
+    FirebaseAuth.instance.signOut();
+    Get.offNamed('/login');
+  }
 
   //최초로그인정보 저장 휴대폰 내부 저장소
   setlogininfo(String id, String kind, String token) async {
@@ -200,22 +208,17 @@ class Logincontroller extends GetxController {
   //자동로그인 설정
   getlogininfo() async {
     var userInfo = await storage.readAll();
-    List<Userinfo> info;
+
     if (userInfo.isNotEmpty) {
-      print(userInfo.toString());
-      var response = await dio.post('/login/getuserinfo', data: {
+      var response = await dio.get('/login/user-info', queryParameters: {
         'id': userInfo['id'].toString(),
         'kind': userInfo['kind'].toString()
       });
-
       if (response.statusCode == 200) {
-        info = (response.data).map<Userinfo>((json) {
-          return Userinfo.fromJson(json);
-        }).toList();
-        if (info.length == 1) {
-          Statecontroller.to.loginType(info[0].kind);
-          Statecontroller.to.loginId(info[0].id);
-          await Geolocator.requestPermission();
+        if (userInfo['id'] == response.data['id'] &&
+            userInfo['kind'] == response.data['kind']) {
+          Statecontroller.to.loginType(response.data['kind']);
+          Statecontroller.to.loginId(response.data['id']);
           Get.offNamed('/root');
         }
       }
@@ -224,20 +227,15 @@ class Logincontroller extends GetxController {
 
   //최초 로그인정보 저장 데이터베이스
   insertlogininfoDB(String id, String kind, String token) async {
-    List<Userinfo> info;
     String? fmtoken = await FirebaseMessaging.instance.getToken();
     if (fmtoken != null) {
-      var response = await dio.post('/login/userinfo',
+      var response = await dio.post('/login/user-info',
           data: {'id': id, 'kind': kind, 'token': token, 'fmtoken': fmtoken});
 
       if (response.statusCode == 200) {
-        info = (response.data).map<Userinfo>((json) {
-          return Userinfo.fromJson(json);
-        }).toList();
-        if (info.length == 1) {
-          Statecontroller.to.loginType(info[0].kind);
-          Statecontroller.to.loginId(info[0].id);
-          await Geolocator.requestPermission();
+        if (id == response.data['id'] && kind == response.data['kind']) {
+          Statecontroller.to.loginType(response.data['kind']);
+          Statecontroller.to.loginId(response.data['id']);
           Get.offNamed('/root');
         }
       }
