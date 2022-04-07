@@ -210,6 +210,8 @@ class Logincontroller extends GetxController {
     var userInfo = await storage.readAll();
 
     if (userInfo.isNotEmpty) {
+      print(userInfo['id'].toString());
+      print(userInfo['kind'].toString());
       var response = await dio.get('/login/user-info', queryParameters: {
         'id': userInfo['id'].toString(),
         'kind': userInfo['kind'].toString()

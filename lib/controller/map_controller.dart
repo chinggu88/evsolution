@@ -20,7 +20,10 @@ class Mapcontroller extends GetxController {
   final currentPostion = LatLng(0.0, 0.0).obs;
   RxSet<Marker> evMarker = <Marker>{}.obs;
   RxMap<String, dynamic> evinfo = <String, dynamic>{}.obs;
+  //주변충전소 정보
   List<Stationinfo> stationinfo = <Stationinfo>[].obs;
+  //즐겨찾기 정보
+  List<Stationinfo> favoriteinfo = <Stationinfo>[].obs;
   Marker? clickmarker;
 
   final naviindex = 0.obs;
@@ -49,7 +52,6 @@ class Mapcontroller extends GetxController {
 
   //화면이동
   void onCameraIdle(Completer<GoogleMapController> gcontroller) async {
-    print("-------------------------------------------------");
     var response;
     if (!gcontroller.isCompleted) return;
     final cont = await gcontroller.future;
@@ -355,14 +357,53 @@ class Mapcontroller extends GetxController {
 
   //근처충전소
   nearlystation() {
-    naviindex(2);
+    naviindex(1);
     pcontroller.open();
   }
 
   //즐겨찾기
-  favoritestation() {
-    naviindex(1);
+  favoritestation() async {
+    //리스트 생성
+    var response = await dio.get('/search/favorites', queryParameters: {
+      'id': Statecontroller.to.loginId.value,
+    });
+
+    if (response.statusCode == 200) {
+      stationinfo = (response.data['evstation']).map<Stationinfo>((json) {
+        return Stationinfo.fromJson(json);
+      }).toList();
+      favoriteinfo.addAll(stationinfo);
+    }
+    naviindex(2);
     pcontroller.open();
+  }
+
+  //즐겨찾기 추가
+  addfavorited(String statid) async {
+    print("${Statecontroller.to.loginId.value} and ${statid}");
+    var response = await dio.post('/search/favorites', data: {
+      'id': Statecontroller.to.loginId.value.toString(),
+      'statId': statid,
+    });
+    if (response.statusCode == 200) {
+      Get.snackbar("결과", "즐겨찾기 추가 성공");
+    } else {
+      Get.snackbar("결과", "즐겨찾기 추가 실패");
+    }
+  }
+
+  //즐겨찾기 삭제
+  delfavorited(String statid) async {
+    var response = await dio.delete('/search/favorites', queryParameters: {
+      'id': Statecontroller.to.loginId.value,
+      'statId': statid,
+    });
+    if (response.statusCode == 200) {
+      Get.snackbar("결과", "즐겨찾기 삭제 성공");
+    } else {
+      Get.snackbar("결과", "즐겨찾기 삭제 실패");
+    }
+    favoriteinfo.removeWhere((element) => element.statId == statid);
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {

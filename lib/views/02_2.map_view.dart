@@ -105,6 +105,7 @@ class map extends StatelessWidget {
         }),
         panel: Obx(() {
           switch (Mapcontroller.to.naviindex.value) {
+            //마커 정보
             case 0:
               return Container(
                 child: Row(
@@ -117,9 +118,17 @@ class map extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Container(
-                                child: SvgPicture.asset(
-                                    'assets/image/map/union.svg')),
+                            GestureDetector(
+                              onTap: () {
+                                Mapcontroller.to.addfavorited(Mapcontroller
+                                    .to.evinfo['statId']
+                                    .toString());
+                              },
+                              child: Container(
+                                  color: 1 == 1 ? Colors.red : Colors.amber,
+                                  child: SvgPicture.asset(
+                                      'assets/image/map/union.svg')),
+                            ),
                             SizedBox(
                               width: Get.size.width * 0.018,
                             ),
@@ -145,9 +154,9 @@ class map extends StatelessWidget {
                             fontFamily: 'Pretendard-Medium',
                           ),
                         ),
-                        SizedBox(
-                          height: Get.size.height * 0.031,
-                        ),
+                        // SizedBox(
+                        //   height: Get.size.height * 0.031,
+                        // ),
                         Row(
                           children: [
                             Container(
@@ -478,6 +487,7 @@ class map extends StatelessWidget {
                   ],
                 ),
               );
+            //주변충전기
             case 1:
               return Column(
                 children: [
@@ -613,9 +623,190 @@ class map extends StatelessWidget {
                   ),
                 ],
               );
+            //즐겨찾기 화면
+            case 2:
+              return Mapcontroller.to.favoriteinfo.length != 0
+                  ? Column(
+                      children: [
+                        Container(
+                          height: Get.size.height * 0.05,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: Get.size.width * 0.044,
+                              ),
+                              Icon(Icons.star_border_sharp),
+                              Text(
+                                '즐겨찾는 충전소',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'Pretendard-Regular',
+                                ),
+                              ),
+                              SizedBox(
+                                width: Get.size.width * 0.414,
+                              ),
+                              DropdownButton(
+                                value: '거리순',
+                                items: ['거리순', '가격순'].map((value) {
+                                  return DropdownMenuItem(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (e) {},
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: Get.size.height * 0.011,
+                          decoration: BoxDecoration(
+                            color: Color(0xfff8f4f4),
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              itemCount: Mapcontroller.to.favoriteinfo.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                List<Stationinfo> temp =
+                                    Mapcontroller.to.favoriteinfo.toList();
+                                return GestureDetector(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  child: Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: Get.size.width *
+                                                            0.044,
+                                                      ),
+                                                      Icon(Icons
+                                                          .star_border_sharp),
+                                                      Text(
+                                                        temp[index]
+                                                            .statNm
+                                                            .toString(),
+                                                        overflow: TextOverflow
+                                                            .visible,
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontFamily:
+                                                              'Pretendard-Bold',
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: Get.size.width *
+                                                          0.044,
+                                                    ),
+                                                    Container(
+                                                      width:
+                                                          Get.size.width * 0.5,
+                                                      child: Text(
+                                                          temp[index]
+                                                              .addr
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Roboto-Regular',
+                                                          ),
+                                                          overflow: TextOverflow
+                                                              .ellipsis),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            GestureDetector(
+                                              onTap: () => Mapcontroller.to
+                                                  .delfavorited(temp[index]
+                                                      .statId
+                                                      .toString()),
+                                              child: Container(
+                                                height: Get.size.height * 0.042,
+                                                width: Get.size.width * 0.2,
+                                                margin: EdgeInsets.only(
+                                                  left: 0.059,
+                                                  right: 0.059,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: Color(0xff0431a6),
+                                                    width: 1,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  '삭제',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
+                                                    fontFamily:
+                                                        'Pretendard-Regular',
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              height: Get.size.height * 0.042,
+                                              width: Get.size.width * 0.2,
+                                              margin: EdgeInsets.only(
+                                                left: 0.059,
+                                                right: 0.059,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Color(0xff0431a6),
+                                                  width: 1,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                '상세보기',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12,
+                                                  fontFamily:
+                                                      'Pretendard-Regular',
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                        ),
+                      ],
+                    )
+                  : Expanded(
+                      child: Center(child: Text("즐겨찾기 목록이 없습니다.")),
+                    );
           }
           return Container(
-            child: Text('검색결과가 없습니다.'),
+            child: Text('검색결과가 없습니다.!'),
           );
         }),
       ),
