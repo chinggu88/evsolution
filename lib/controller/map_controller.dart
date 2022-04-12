@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 import 'package:dio/dio.dart';
 import 'package:evsolution/controller/stats_controller.dart';
 import 'package:evsolution/model/stationinfo.dart';
-import 'package:flutter/material.dart';
+
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -363,16 +363,17 @@ class Mapcontroller extends GetxController {
 
   //즐겨찾기
   favoritestation() async {
+    favoriteinfo.clear();
     //리스트 생성
     var response = await dio.get('/search/favorites', queryParameters: {
       'id': Statecontroller.to.loginId.value,
     });
 
     if (response.statusCode == 200) {
-      stationinfo = (response.data['evstation']).map<Stationinfo>((json) {
+      var temp = (response.data['evstation']).map<Stationinfo>((json) {
         return Stationinfo.fromJson(json);
       }).toList();
-      favoriteinfo.addAll(stationinfo);
+      favoriteinfo.addAll(temp);
     }
     naviindex(2);
     pcontroller.open();
@@ -385,7 +386,7 @@ class Mapcontroller extends GetxController {
       'id': Statecontroller.to.loginId.value.toString(),
       'statId': statid,
     });
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       Get.snackbar("결과", "즐겨찾기 추가 성공");
     } else {
       Get.snackbar("결과", "즐겨찾기 추가 실패");

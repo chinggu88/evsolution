@@ -1,5 +1,7 @@
+import 'package:evsolution/controller/home_controller.dart';
 import 'package:evsolution/controller/root_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'dart:ui' as ui;
@@ -186,95 +188,118 @@ class Home extends StatelessWidget {
               ],
             ),
             SizedBox(height: Get.size.height * 0.006),
-            Row(
-              children: [
-                SizedBox(width: Get.size.width * 0.05),
-                Expanded(
-                    child: Container(
-                  height: Get.size.height * 0.2,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 4,
-                      itemBuilder: (context, index) {
-                        return Row(
-                          children: [
-                            new Container(
-                              width: Get.size.width * 0.397,
-                              height: Get.size.height * 0.191,
-                              decoration: new BoxDecoration(
-                                color: Color(0xffffffff),
-                                borderRadius: BorderRadius.circular(8),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Color(0x19000000),
-                                      offset: Offset(2, 2),
-                                      blurRadius: 4,
-                                      spreadRadius: 0)
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: Get.size.height * 0.023),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                          'assets/image/home/start_icon.svg'),
-                                      SizedBox(width: Get.size.width * 0.031),
-                                      new Text("판교 테크노벨리",
-                                          style: TextStyle(
-                                            fontFamily: 'Pretendard',
-                                            color: Color(0xff363434),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            fontStyle: FontStyle.normal,
-                                          ))
-                                    ],
-                                  ),
-                                  SizedBox(height: Get.size.height * 0.045),
-                                  Row(
-                                    children: [
-                                      SizedBox(width: Get.size.width * 0.039),
-                                      new Text("29분",
-                                          style: TextStyle(
-                                            fontFamily: 'Pretendard',
-                                            color: Color(0xff323232),
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle: FontStyle.normal,
-                                            letterSpacing: 0.5,
-                                          )),
-                                    ],
-                                  ),
-                                  SizedBox(height: Get.size.height * 0.015),
-                                  Row(
-                                    children: [
-                                      SizedBox(width: Get.size.width * 0.039),
-                                      new Text("5.9km",
-                                          style: TextStyle(
-                                            fontFamily: 'Pretendard',
-                                            color: Color(0xff4b4b4b),
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w300,
-                                            fontStyle: FontStyle.normal,
-                                            letterSpacing: 0.5,
-                                          )),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: Get.size.width * 0.02,
-                              color: Color(0xfff6f6f6),
-                            )
-                          ],
-                        );
-                      }),
-                )),
-              ],
-            ),
+            Obx(() {
+              return Homcontroller.to.favoriteinfo.length != 0
+                  ? Row(
+                      children: [
+                        SizedBox(width: Get.size.width * 0.05),
+                        Expanded(
+                            child: Container(
+                          height: Get.size.height * 0.2,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: Homcontroller.to.favoriteinfo.length,
+                              itemBuilder: (context, index) {
+                                return Row(
+                                  children: [
+                                    new Container(
+                                      width: Get.size.width * 0.397,
+                                      height: Get.size.height * 0.191,
+                                      decoration: new BoxDecoration(
+                                        color: Color(0xffffffff),
+                                        borderRadius: BorderRadius.circular(8),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Color(0x19000000),
+                                              offset: Offset(2, 2),
+                                              blurRadius: 4,
+                                              spreadRadius: 0)
+                                        ],
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                              height: Get.size.height * 0.023),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SvgPicture.asset(
+                                                  'assets/image/home/start_icon.svg'),
+                                              SizedBox(
+                                                  width:
+                                                      Get.size.width * 0.031),
+                                              new Text(
+                                                  Homcontroller
+                                                      .to
+                                                      .favoriteinfo[index]
+                                                      .statNm
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                    fontFamily: 'Pretendard',
+                                                    color: Color(0xff363434),
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontStyle: FontStyle.normal,
+                                                  ))
+                                            ],
+                                          ),
+                                          SizedBox(
+                                              height: Get.size.height * 0.045),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                  width:
+                                                      Get.size.width * 0.039),
+                                              new Text("29분",
+                                                  style: TextStyle(
+                                                    fontFamily: 'Pretendard',
+                                                    color: Color(0xff323232),
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontStyle: FontStyle.normal,
+                                                    letterSpacing: 0.5,
+                                                  )),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                              height: Get.size.height * 0.015),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                  width:
+                                                      Get.size.width * 0.039),
+                                              new Text("5.9km",
+                                                  style: TextStyle(
+                                                    fontFamily: 'Pretendard',
+                                                    color: Color(0xff4b4b4b),
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.w300,
+                                                    fontStyle: FontStyle.normal,
+                                                    letterSpacing: 0.5,
+                                                  )),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      width: Get.size.width * 0.02,
+                                      color: Color(0xfff6f6f6),
+                                    )
+                                  ],
+                                );
+                              }),
+                        )),
+                      ],
+                    )
+                  : Container(
+                      child: Expanded(
+                          child: Center(child: Text('즐겨찾기 목록이 없습니다.'))),
+                    );
+            })
           ],
         ));
   }
