@@ -1,3 +1,4 @@
+import 'package:evsolution/controller/home_controller.dart';
 import 'package:evsolution/controller/map_controller.dart';
 import 'package:evsolution/controller/navi_controller.dart';
 import 'package:get/get.dart';
@@ -25,6 +26,10 @@ class Rootcontroller extends GetxController {
   void changeIndex(int index) {
     currentIndex(index);
     switch (index) {
+      case 0:
+        Homcontroller.to.onClose();
+        Homcontroller.to.onInit();
+        break;
       case 1:
         Mapcontroller.to.onClose();
         Mapcontroller.to.onInit();

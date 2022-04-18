@@ -107,8 +107,12 @@ class map extends StatelessWidget {
           switch (Mapcontroller.to.naviindex.value) {
             //마커 정보
             case 0:
-              return Container(
+              return Mapcontroller.to.evstationinfo.isNotEmpty ?
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                width: Get.size.width,
                 child: Row(
+                  
                   children: [
                     SizedBox(
                       width: Get.size.width * 0.058,
@@ -121,7 +125,7 @@ class map extends StatelessWidget {
                             GestureDetector(
                               onTap: () {
                                 Mapcontroller.to.addfavorited(Mapcontroller
-                                    .to.evinfo['statId']
+                                    .to.evstationinfo[0].statId
                                     .toString());
                               },
                               child: Container(
@@ -132,13 +136,17 @@ class map extends StatelessWidget {
                             SizedBox(
                               width: Get.size.width * 0.018,
                             ),
-                            Text(
-                              Mapcontroller.to.evinfo['statNm'].toString(),
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 22,
-                                fontFamily: 'Pretendard-SemiBold',
-                                fontWeight: FontWeight.w600,
+                            Container(
+                              width: Get.size.width * 0.8,
+                              child: Text(
+                                Mapcontroller.to.evstationinfo[0].statNm.toString(),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 22,
+                                  fontFamily: 'Pretendard-SemiBold',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
@@ -146,17 +154,21 @@ class map extends StatelessWidget {
                         SizedBox(
                           height: Get.size.height * 0.01,
                         ),
-                        Text(
-                          Mapcontroller.to.evinfo['addr'].toString(),
-                          style: TextStyle(
-                            color: Color(0xff545454),
-                            fontSize: 15,
-                            fontFamily: 'Pretendard-Medium',
+                        Container(
+                          width: Get.size.width * 0.8,
+                          child: Text(
+                            Mapcontroller.to.evstationinfo[0].addr.toString(),
+                            style: TextStyle(
+                              color: Color(0xff545454),
+                              fontSize: 15,
+                              fontFamily: 'Pretendard-Medium',
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        // SizedBox(
-                        //   height: Get.size.height * 0.031,
-                        // ),
+                        SizedBox(
+                          height: Get.size.height * 0.031,
+                        ),
                         Row(
                           children: [
                             Container(
@@ -226,7 +238,7 @@ class map extends StatelessWidget {
                                       height: Get.size.height * 0.004,
                                     ),
                                     Text(
-                                      Mapcontroller.to.evinfo['parkingFree']
+                                      Mapcontroller.to.evstationinfo[0].parkingFree
                                                   .toString() ==
                                               'Y'
                                           ? '주자무료'
@@ -334,8 +346,9 @@ class map extends StatelessWidget {
                             height: Get.size.height * 0.27,
                             width: Get.size.width * 0.884,
                             child: ListView.builder(
-                                itemCount: 8,
+                                itemCount: Mapcontroller.to.evstationinfo.length,
                                 itemBuilder: (BuildContext context, int index) {
+                                  var temp =Mapcontroller.to.evstationinfo[index];
                                   return Column(
                                     children: [
                                       Container(
@@ -360,6 +373,7 @@ class map extends StatelessWidget {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
+                                                  Text(temp.chgerType.toString()),
                                                   Text(
                                                     '급속 1',
                                                     style: TextStyle(
@@ -486,6 +500,8 @@ class map extends StatelessWidget {
                     ),
                   ],
                 ),
+              ):Container(
+                child: Center(child: Text('검색중...'),),
               );
             //주변충전기
             case 1:

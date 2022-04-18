@@ -39,6 +39,7 @@ class Logincontroller extends GetxController {
 
   // google login
   Future<UserCredential?> signInWithGoogle() async {
+    print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa google login');
     try {
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -63,7 +64,7 @@ class Logincontroller extends GetxController {
       // Once signed in, return the UserCredential
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -84,14 +85,14 @@ class Logincontroller extends GetxController {
 
       NaverAccessToken token = await FlutterNaverLogin.currentAccessToken;
       if (result.account.email != null) {
-        setlogininfo(
-            result.account.email, 'naver', token.accessToken.toString());
         insertlogininfoDB(
+            result.account.email, 'naver', token.accessToken.toString());
+        setlogininfo(
             result.account.email, 'naver', token.accessToken.toString());
       }
     } catch (e) {
       Get.snackbar('주의', '네이버앱을 설치해주세요');
-      print(e.toString());
+      log(e.toString());
     }
   }
 
@@ -210,17 +211,15 @@ class Logincontroller extends GetxController {
     var userInfo = await storage.readAll();
 
     if (userInfo.isNotEmpty) {
-      print(userInfo['id'].toString());
-      print(userInfo['kind'].toString());
       var response = await dio.get('/login/user-info', queryParameters: {
         'id': userInfo['id'].toString(),
         'kind': userInfo['kind'].toString()
       });
       if (response.statusCode == 200) {
-        if (userInfo['id'] == response.data['id'] &&
-            userInfo['kind'] == response.data['kind']) {
-          Statecontroller.to.loginType(response.data['kind']);
-          Statecontroller.to.loginId(response.data['id']);
+        if (userInfo['id'] == response.data[0]['id'] &&
+            userInfo['kind'] == response.data[0]['kind']) {
+          Statecontroller.to.loginType(response.data[0]['kind']);
+          Statecontroller.to.loginId(response.data[0]['id']);
           Get.offNamed('/root');
         }
       }
@@ -235,7 +234,7 @@ class Logincontroller extends GetxController {
           data: {'id': id, 'kind': kind, 'token': token, 'fmtoken': fmtoken});
 
       if (response.statusCode == 200) {
-        if (id == response.data['id'] && kind == response.data['kind']) {
+        if (id == response.data[0]['id'].toString() && kind == response.data[0]['kind'].toString()) {
           Statecontroller.to.loginType(response.data['kind']);
           Statecontroller.to.loginId(response.data['id']);
           Get.offNamed('/root');

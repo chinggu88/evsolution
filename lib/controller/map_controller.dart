@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:dio/dio.dart';
 import 'package:evsolution/controller/stats_controller.dart';
+import 'package:evsolution/model/evstationinfo.dart';
 import 'package:evsolution/model/stationinfo.dart';
 
 import 'package:flutter/services.dart';
@@ -19,11 +21,12 @@ class Mapcontroller extends GetxController {
   PanelController pcontroller = new PanelController();
   final currentPostion = LatLng(0.0, 0.0).obs;
   RxSet<Marker> evMarker = <Marker>{}.obs;
-  RxMap<String, dynamic> evinfo = <String, dynamic>{}.obs;
   //주변충전소 정보
   List<Stationinfo> stationinfo = <Stationinfo>[].obs;
   //즐겨찾기 정보
   List<Stationinfo> favoriteinfo = <Stationinfo>[].obs;
+  //충정소 정조
+  List<Evstationinfo>evstationinfo =<Evstationinfo>[].obs;
   Marker? clickmarker;
 
   final naviindex = 0.obs;
@@ -39,7 +42,6 @@ class Mapcontroller extends GetxController {
     super.onClose();
     evMarker.clear();
     stationinfo.clear();
-    evinfo.clear();
   }
 
   //현재위치로 셋팅
@@ -47,6 +49,7 @@ class Mapcontroller extends GetxController {
     //현제위치
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+        
     currentPostion(LatLng(position.latitude, position.longitude));
   }
 
@@ -56,13 +59,16 @@ class Mapcontroller extends GetxController {
     if (!gcontroller.isCompleted) return;
     final cont = await gcontroller.future;
     LatLngBounds ragion = await cont.getVisibleRegion();
-
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  
     if (ragion != null) {
       response = await dio.post('/search/evstation', data: {
         'minx': ragion.southwest.latitude.toString(),
         'miny': ragion.southwest.longitude.toString(),
         'maxx': ragion.northeast.latitude.toString(),
-        'maxy': ragion.northeast.longitude.toString()
+        'maxy': ragion.northeast.longitude.toString(),
+        'currentXY':[position.latitude.toString(),position.longitude.toString()]
       });
 
       if (response.statusCode == 200) {
@@ -321,11 +327,14 @@ class Mapcontroller extends GetxController {
 
   markertap(Stationinfo e) async {
     markerset();
-    e.toJson().clear();
-    e.toJson().forEach((key, value) {
-      evinfo[key] = value;
-    });
+    evstationinfo.clear();
+     var response = await dio.get('/station/${e.statId}');
+     if(response.statusCode == 200){
 
+       evstationinfo = (response.data['data']).map<Evstationinfo>((json) {
+          return Evstationinfo.fromJson(json);
+        }).toList();
+     }
     evMarker.forEach((el) async {
       if (el.mapsId.value == e.statId) {
         //기존정보 저장
