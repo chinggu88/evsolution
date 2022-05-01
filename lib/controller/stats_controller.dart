@@ -8,15 +8,16 @@ class Statecontroller extends GetxController {
   RxString loginType = ''.obs;
   RxString loginId = ''.obs;
 
-  //test
+  //splash
   late VideoPlayerController? controller;
   late Future<void>? initialplayer;
+
   @override
   void onInit() async {
     super.onInit();
     // serverUrl = 'http://apis.data.go.kr/B552584/EvCharger/getChargerInfo'.obs;
     // serverUrl = 'http://222.108.135.234:8001/'.obs;
-    serverUrl = 'https://22ae-121-138-152-49.jp.ngrok.io'.obs;
+    serverUrl = 'https://3434-106-101-128-220.jp.ngrok.io'.obs;
     controller = VideoPlayerController.asset('assets/video/plash_home.mp4');
     initialplayer = controller!.initialize();
 

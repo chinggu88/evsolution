@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:evsolution/controller/map_controller.dart';
+import 'package:evsolution/model/evstationinfo.dart';
 import 'package:evsolution/model/stationinfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -107,402 +108,294 @@ class map extends StatelessWidget {
           switch (Mapcontroller.to.naviindex.value) {
             //마커 정보
             case 0:
-              return Mapcontroller.to.evstationinfo.isNotEmpty ?
-              Container(
-                margin: EdgeInsets.only(top: 10),
-                width: Get.size.width,
-                child: Row(
-                  
-                  children: [
-                    SizedBox(
-                      width: Get.size.width * 0.058,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Mapcontroller.to.addfavorited(Mapcontroller
-                                    .to.evstationinfo[0].statId
-                                    .toString());
-                              },
-                              child: Container(
-                                  color: 1 == 1 ? Colors.red : Colors.amber,
-                                  child: SvgPicture.asset(
-                                      'assets/image/map/union.svg')),
-                            ),
-                            SizedBox(
-                              width: Get.size.width * 0.018,
-                            ),
-                            Container(
-                              width: Get.size.width * 0.8,
-                              child: Text(
-                                Mapcontroller.to.evstationinfo[0].statNm.toString(),
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 22,
-                                  fontFamily: 'Pretendard-SemiBold',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: Get.size.height * 0.01,
-                        ),
-                        Container(
-                          width: Get.size.width * 0.8,
-                          child: Text(
-                            Mapcontroller.to.evstationinfo[0].addr.toString(),
-                            style: TextStyle(
-                              color: Color(0xff545454),
-                              fontSize: 15,
-                              fontFamily: 'Pretendard-Medium',
-                            ),
-                            overflow: TextOverflow.ellipsis,
+              return Mapcontroller.to.evstationinfo.isNotEmpty
+                  ? Container(
+                      margin: EdgeInsets.only(top: 10),
+                      width: Get.size.width,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: Get.size.width * 0.058,
                           ),
-                        ),
-                        SizedBox(
-                          height: Get.size.height * 0.031,
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              width: Get.size.width * 0.45,
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '충전요금',
-                                      style: TextStyle(
-                                        color: Color(0xff4a4a4a),
-                                        fontSize: 16,
-                                        fontFamily: 'Pretendard-Regular',
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: Get.size.height * 0.004,
-                                    ),
-                                    Text(
-                                      '350원/kWh',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontFamily: 'Pretendard-Medium',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: Get.size.height * 0.02,
-                                    ),
-                                    Text(
-                                      '운영시간',
-                                      style: TextStyle(
-                                        color: Color(0xff4a4a4a),
-                                        fontSize: 16,
-                                        fontFamily: 'Pretendard-Regular',
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: Get.size.height * 0.004,
-                                    ),
-                                    Text(
-                                      '24시간',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontFamily: 'Pretendard-Medium',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ]),
-                            ),
-                            Container(
-                              width: Get.size.width * 0.45,
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '주차요금',
-                                      style: TextStyle(
-                                        color: Color(0xff4a4a4a),
-                                        fontSize: 16,
-                                        fontFamily: 'Pretendard-Regular',
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: Get.size.height * 0.004,
-                                    ),
-                                    Text(
-                                      Mapcontroller.to.evstationinfo[0].parkingFree
-                                                  .toString() ==
-                                              'Y'
-                                          ? '주자무료'
-                                          : '주차유료',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontFamily: 'Pretendard-Medium',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: Get.size.height * 0.02,
-                                    ),
-                                    Text(
-                                      '운영기관',
-                                      style: TextStyle(
-                                        color: Color(0xff4a4a4a),
-                                        fontSize: 16,
-                                        fontFamily: 'Pretendard-Regular',
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: Get.size.height * 0.004,
-                                    ),
-                                    Text(
-                                      '환경부',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontFamily: 'Pretendard-Medium',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ]),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: Get.size.height * 0.029,
-                        ),
-                        Container(
-                          width: Get.size.width * 0.884,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              GestureDetector(
-                                onTap: () => Get.toNamed('/freport'),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: Get.size.width * 0.38,
-                                  height: Get.size.height * 0.053,
-                                  margin: EdgeInsets.only(
-                                    left: 0.111,
-                                    right: 0.111,
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Mapcontroller.to.addfavorited(
+                                          Mapcontroller
+                                              .to.evstationinfo[0].statId
+                                              .toString());
+                                    },
+                                    child: Container(
+                                        color:
+                                            1 == 1 ? Colors.red : Colors.amber,
+                                        child: SvgPicture.asset(
+                                            'assets/image/map/union.svg')),
                                   ),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Color(0xff0431a6),
-                                      width: 1,
+                                  SizedBox(
+                                    width: Get.size.width * 0.018,
+                                  ),
+                                  Container(
+                                    width: Get.size.width * 0.8,
+                                    child: Text(
+                                      Mapcontroller.to.evstationinfo[0].statNm
+                                          .toString(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 22,
+                                        fontFamily: 'Pretendard-SemiBold',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: Text(
-                                    '고장제보',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontFamily: 'Pretendard-Regular',
-                                    ),
-                                  ),
-                                ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: Get.size.height * 0.01,
                               ),
                               Container(
-                                alignment: Alignment.center,
-                                width: Get.size.width * 0.38,
-                                height: Get.size.height * 0.053,
-                                margin: EdgeInsets.only(
-                                  left: 0.111,
-                                  right: 0.111,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Color(0xff0431a6),
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
+                                width: Get.size.width * 0.8,
                                 child: Text(
-                                  '길안내',
+                                  Mapcontroller.to.evstationinfo[0].addr
+                                      .toString(),
                                   style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontFamily: 'Pretendard-Regular',
+                                    color: Color(0xff545454),
+                                    fontSize: 15,
+                                    fontFamily: 'Pretendard-Medium',
                                   ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: Get.size.height * 0.035,
-                        ),
-                        Container(
-                            height: Get.size.height * 0.27,
-                            width: Get.size.width * 0.884,
-                            child: ListView.builder(
-                                itemCount: Mapcontroller.to.evstationinfo.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  var temp =Mapcontroller.to.evstationinfo[index];
-                                  return Column(
-                                    children: [
-                                      Container(
-                                        width: Get.size.width * 0908,
-                                        height: Get.size.height * 0.12,
-                                        // width: Get.size.width * 0.884,
+                              SizedBox(
+                                height: Get.size.height * 0.031,
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: Get.size.width * 0.45,
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '충전요금',
+                                            style: TextStyle(
+                                              color: Color(0xff4a4a4a),
+                                              fontSize: 16,
+                                              fontFamily: 'Pretendard-Regular',
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: Get.size.height * 0.004,
+                                          ),
+                                          Text(
+                                            '350원/kWh',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontFamily: 'Pretendard-Medium',
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: Get.size.height * 0.02,
+                                          ),
+                                          Text(
+                                            '운영시간',
+                                            style: TextStyle(
+                                              color: Color(0xff4a4a4a),
+                                              fontSize: 16,
+                                              fontFamily: 'Pretendard-Regular',
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: Get.size.height * 0.004,
+                                          ),
+                                          Text(
+                                            '24시간',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontFamily: 'Pretendard-Medium',
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ]),
+                                  ),
+                                  Container(
+                                    width: Get.size.width * 0.45,
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '주차요금',
+                                            style: TextStyle(
+                                              color: Color(0xff4a4a4a),
+                                              fontSize: 16,
+                                              fontFamily: 'Pretendard-Regular',
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: Get.size.height * 0.004,
+                                          ),
+                                          Text(
+                                            Mapcontroller.to.evstationinfo[0]
+                                                        .parkingFree
+                                                        .toString() ==
+                                                    'Y'
+                                                ? '주자무료'
+                                                : '주차유료',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontFamily: 'Pretendard-Medium',
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: Get.size.height * 0.02,
+                                          ),
+                                          Text(
+                                            '운영기관',
+                                            style: TextStyle(
+                                              color: Color(0xff4a4a4a),
+                                              fontSize: 16,
+                                              fontFamily: 'Pretendard-Regular',
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: Get.size.height * 0.004,
+                                          ),
+                                          Text(
+                                            '환경부',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontFamily: 'Pretendard-Medium',
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ]),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: Get.size.height * 0.029,
+                              ),
+                              Container(
+                                width: Get.size.width * 0.884,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () => Get.toNamed('/freport'),
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        width: Get.size.width * 0.38,
+                                        height: Get.size.height * 0.053,
+                                        margin: EdgeInsets.only(
+                                          left: 0.111,
+                                          right: 0.111,
+                                        ),
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                            color: Color(0xffb4b4b4),
+                                            color: Color(0xff0431a6),
                                             width: 1,
                                           ),
                                           borderRadius:
-                                              BorderRadius.circular(7),
+                                              BorderRadius.circular(8),
                                         ),
-                                        child: Row(
-                                          children: [
-                                            SizedBox(
-                                              width: Get.size.width * 0.034,
-                                            ),
-                                            Container(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(temp.chgerType.toString()),
-                                                  Text(
-                                                    '급속 1',
-                                                    style: TextStyle(
-                                                      color: Color(0xff131313),
-                                                      fontFamily:
-                                                          'Pretendard-Bold',
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    '충전가능',
-                                                    style: TextStyle(
-                                                      color: Color(0xff02845d),
-                                                      fontFamily:
-                                                          'Pretendard-Medium',
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    '지하2층',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                      fontFamily:
-                                                          'Pretendard-Regular',
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: Get.size.width * 0.10,
-                                            ),
-                                            Container(
-                                              width: Get.size.width * 0.14,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    width:
-                                                        Get.size.width * 0.12,
-                                                    height:
-                                                        Get.size.width * 0.12,
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                        color:
-                                                            Color(0xff02845d),
-                                                        width: 1,
-                                                      ),
-                                                    ),
-                                                    child: SvgPicture.asset(
-                                                        'assets/image/map/connect_type1.svg'),
-                                                  ),
-                                                  Text(
-                                                    'DC콤보',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                      fontFamily:
-                                                          'Pretendard-Regular',
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: Get.size.width * 0.074,
-                                            ),
-                                            Container(
-                                              width: Get.size.width * 0.14,
-                                              child: Column(
-                                                children: [
-                                                  SvgPicture.asset(
-                                                      'assets/image/map/connect_type1.svg'),
-                                                  Text(
-                                                    'DC콤보',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                      fontFamily:
-                                                          'Pretendard-Regular',
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: Get.size.width * 0.074,
-                                            ),
-                                            Container(
-                                              width: Get.size.width * 0.14,
-                                              child: Column(
-                                                children: [
-                                                  SvgPicture.asset(
-                                                      'assets/image/map/connect_type1.svg'),
-                                                  Text(
-                                                    'DC콤보',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                      fontFamily:
-                                                          'Pretendard-Regular',
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
+                                        child: Text(
+                                          '고장제보',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontFamily: 'Pretendard-Regular',
+                                          ),
                                         ),
                                       ),
-                                      SizedBox(
-                                        height: Get.size.height * 0.008,
-                                      )
-                                    ],
-                                  );
-                                }))
-                        // Text(Mapcontroller.to.evinfo.toJson().value)
-                      ],
-                    ),
-                  ],
-                ),
-              ):Container(
-                child: Center(child: Text('검색중...'),),
-              );
+                                    ),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: Get.size.width * 0.38,
+                                      height: Get.size.height * 0.053,
+                                      margin: EdgeInsets.only(
+                                        left: 0.111,
+                                        right: 0.111,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Color(0xff0431a6),
+                                          width: 1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        '길안내',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontFamily: 'Pretendard-Regular',
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: Get.size.height * 0.035,
+                              ),
+                              Expanded(
+                                child: Container(
+                                    width: Get.size.width * 0.884,
+                                    child: ListView.builder(
+                                        itemCount: Mapcontroller
+                                            .to.evstationinfo.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          Evstationinfo temp = Mapcontroller
+                                              .to.evstationinfo[index];
+                                          return Column(
+                                            children: [
+                                              Container(
+                                                  width: Get.size.width * 0908,
+                                                  height:
+                                                      Get.size.height * 0.12,
+                                                  // width: Get.size.width * 0.884,
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: Color(0xffb4b4b4),
+                                                      width: 1,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            7),
+                                                  ),
+                                                  child: tapinfo(temp)),
+                                              SizedBox(
+                                                height: Get.size.height * 0.008,
+                                              )
+                                            ],
+                                          );
+                                        })),
+                              )
+                              // Text(Mapcontroller.to.evinfo.toJson().value)
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(
+                      child: Center(
+                        child: Text('검색중...'),
+                      ),
+                    );
             //주변충전기
             case 1:
               return Column(
@@ -828,4 +721,142 @@ class map extends StatelessWidget {
       ),
     );
   }
+}
+
+//충전기타입에 따라 다르게 return
+Widget tapinfo(Evstationinfo v) {
+  switch (v.chgerType) {
+    case "01":
+      //DC차데모
+      return Container();
+    case "02":
+      //AC완속
+      return Container();
+    case "03":
+      //DC차데모 + AC상
+      return Container();
+    case "04":
+      //DC콤보
+      return Container();
+    case "05":
+      //DC차데모 + DC콤보
+      return Container();
+    case "06":
+      //DC차데모 + AC상++ DC콤보
+      return Container();
+    default:
+      //알수없는 버전
+      return Container(
+        child: Center(child: Text('알수없는 타입입니다. \n관리자에게 연락주세요.')),
+      );
+  }
+  // return Row(
+  //   children: [
+  //     SizedBox(
+  //       width: Get.size.width * 0.034,
+  //     ),
+  //     Container(
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           Text(value.chgerType.toString()),
+  //           Text(
+  //             '급속 1',
+  //             style: TextStyle(
+  //               color: Color(0xff131313),
+  //               fontFamily: 'Pretendard-Bold',
+  //               fontWeight: FontWeight.w700,
+  //               fontSize: 14,
+  //             ),
+  //           ),
+  //           Text(
+  //             '충전가능',
+  //             style: TextStyle(
+  //               color: Color(0xff02845d),
+  //               fontFamily: 'Pretendard-Medium',
+  //               fontWeight: FontWeight.w500,
+  //               fontSize: 14,
+  //             ),
+  //           ),
+  //           Text(
+  //             '지하2층',
+  //             style: TextStyle(
+  //               color: Colors.black,
+  //               fontSize: 12,
+  //               fontFamily: 'Pretendard-Regular',
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //     SizedBox(
+  //       width: Get.size.width * 0.10,
+  //     ),
+  //     Container(
+  //       width: Get.size.width * 0.14,
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           Container(
+  //             width: Get.size.width * 0.12,
+  //             height: Get.size.width * 0.12,
+  //             decoration: BoxDecoration(
+  //               border: Border.all(
+  //                 color: Color(0xff02845d),
+  //                 width: 1,
+  //               ),
+  //             ),
+  //             child: SvgPicture.asset('assets/image/map/connect_type1.svg'),
+  //           ),
+  //           Text(
+  //             'DC콤보',
+  //             style: TextStyle(
+  //               color: Colors.black,
+  //               fontSize: 12,
+  //               fontFamily: 'Pretendard-Regular',
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //     SizedBox(
+  //       width: Get.size.width * 0.074,
+  //     ),
+  //     Container(
+  //       width: Get.size.width * 0.14,
+  //       child: Column(
+  //         children: [
+  //           SvgPicture.asset('assets/image/map/connect_type1.svg'),
+  //           Text(
+  //             'DC콤보',
+  //             style: TextStyle(
+  //               color: Colors.black,
+  //               fontSize: 12,
+  //               fontFamily: 'Pretendard-Regular',
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //     SizedBox(
+  //       width: Get.size.width * 0.074,
+  //     ),
+  //     Container(
+  //       width: Get.size.width * 0.14,
+  //       child: Column(
+  //         children: [
+  //           SvgPicture.asset('assets/image/map/connect_type1.svg'),
+  //           Text(
+  //             'DC콤보',
+  //             style: TextStyle(
+  //               color: Colors.black,
+  //               fontSize: 12,
+  //               fontFamily: 'Pretendard-Regular',
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     )
+  //   ],
+  // );
 }

@@ -26,7 +26,7 @@ class Mapcontroller extends GetxController {
   //즐겨찾기 정보
   List<Stationinfo> favoriteinfo = <Stationinfo>[].obs;
   //충정소 정조
-  List<Evstationinfo>evstationinfo =<Evstationinfo>[].obs;
+  List<Evstationinfo> evstationinfo = <Evstationinfo>[].obs;
   Marker? clickmarker;
 
   final naviindex = 0.obs;
@@ -49,7 +49,7 @@ class Mapcontroller extends GetxController {
     //현제위치
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-        
+
     currentPostion(LatLng(position.latitude, position.longitude));
   }
 
@@ -61,14 +61,17 @@ class Mapcontroller extends GetxController {
     LatLngBounds ragion = await cont.getVisibleRegion();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-  
+
     if (ragion != null) {
       response = await dio.post('/search/evstation', data: {
         'minx': ragion.southwest.latitude.toString(),
         'miny': ragion.southwest.longitude.toString(),
         'maxx': ragion.northeast.latitude.toString(),
         'maxy': ragion.northeast.longitude.toString(),
-        'currentXY':[position.latitude.toString(),position.longitude.toString()]
+        'currentXY': [
+          position.latitude.toString(),
+          position.longitude.toString()
+        ]
       });
 
       if (response.statusCode == 200) {
@@ -328,13 +331,12 @@ class Mapcontroller extends GetxController {
   markertap(Stationinfo e) async {
     markerset();
     evstationinfo.clear();
-     var response = await dio.get('/station/${e.statId}');
-     if(response.statusCode == 200){
-
-       evstationinfo = (response.data['data']).map<Evstationinfo>((json) {
-          return Evstationinfo.fromJson(json);
-        }).toList();
-     }
+    var response = await dio.get('/station/${e.statId}');
+    if (response.statusCode == 200) {
+      evstationinfo = (response.data['data']).map<Evstationinfo>((json) {
+        return Evstationinfo.fromJson(json);
+      }).toList();
+    }
     evMarker.forEach((el) async {
       if (el.mapsId.value == e.statId) {
         //기존정보 저장
