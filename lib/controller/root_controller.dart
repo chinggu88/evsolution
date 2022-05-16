@@ -8,7 +8,9 @@ enum RouteName { home, map, navisearch, uselist, myinfo }
 
 class Rootcontroller extends GetxController {
   static Rootcontroller get to => Get.find();
+  //현제 바텀탭 번호
   RxInt currentIndex = 0.obs;
+  
   RxString currentView = 'Home'.obs;
   //권한목록
   List<Permission> permission = [

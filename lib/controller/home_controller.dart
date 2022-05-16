@@ -31,4 +31,12 @@ class Homcontroller extends GetxController {
       favoriteinfo.addAll(temp);
     }
   }
+
+  Map<String, String> getlist() {
+    
+      
+      Map<String,String> test = {"aaa":"aaa"};
+    return test;
+  }
+
 }

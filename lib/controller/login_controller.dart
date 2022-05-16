@@ -39,7 +39,6 @@ class Logincontroller extends GetxController {
 
   // google login
   Future<UserCredential?> signInWithGoogle() async {
-    print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa google login');
     try {
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -158,7 +157,6 @@ class Logincontroller extends GetxController {
   }
 
   //apple 로그인
-  // Future<UserCredential> signInWithApple() async {
   Future<void> signInWithApple() async {
     log('apple login !');
 
@@ -183,7 +181,6 @@ class Logincontroller extends GetxController {
       print(e);
     });
 
-    // return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
   }
 
   //apple logout

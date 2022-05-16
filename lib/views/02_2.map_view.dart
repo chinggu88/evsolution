@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:evsolution/controller/map_controller.dart';
 import 'package:evsolution/model/evstationinfo.dart';
@@ -728,135 +729,489 @@ Widget tapinfo(Evstationinfo v) {
   switch (v.chgerType) {
     case "01":
       //DC차데모
-      return Container();
+      return Row(
+    children: [
+      SizedBox(
+        width: Get.size.width * 0.034,
+      ),
+      Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(v.chgerType.toString()),
+            Text(
+              v.output.toString(),
+              style: TextStyle(
+                color: Color(0xff131313),
+                fontFamily: 'Pretendard-Bold',
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              v.stat.toString(),
+              style: TextStyle(
+                color: Color(0xff02845d),
+                fontFamily: 'Pretendard-Medium',
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              '지하2층',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontFamily: 'Pretendard-Regular',
+              ),
+            ),
+          ],
+        ),
+      ),
+      SizedBox(
+        width: Get.size.width * 0.10,
+      ),
+      Container(
+        width: Get.size.width * 0.14,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: Get.size.width * 0.12,
+              height: Get.size.width * 0.12,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Color(0xff02845d),
+                  width: 1,
+                ),
+              ),
+              child: SvgPicture.asset('assets/image/map/connect_type2.svg'),
+            ),
+            Text(
+              'DC차데모',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontFamily: 'Pretendard-Regular',
+              ),
+            ),
+          ],
+        ),
+      ),
+      
+    ],
+  );
     case "02":
       //AC완속
-      return Container();
+      return Row(children: [Container()]);
     case "03":
       //DC차데모 + AC상
-      return Container();
+      return Row(
+    children: [
+      SizedBox(
+        width: Get.size.width * 0.034,
+      ),
+      Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              v.output.toString(),
+              style: TextStyle(
+                color: Color(0xff131313),
+                fontFamily: 'Pretendard-Bold',
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              v.stat.toString(),
+              style: TextStyle(
+                color: Color(0xff02845d),
+                fontFamily: 'Pretendard-Medium',
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              '지하2층',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontFamily: 'Pretendard-Regular',
+              ),
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        child: Container(
+          width: Get.size.width * 0.14,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: Get.size.width * 0.12,
+                height: Get.size.width * 0.12,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xff02845d),
+                    width: 1,
+                  ),
+                ),
+                child: SvgPicture.asset('assets/image/map/connect_type2.svg'),
+              ),
+              Text(
+                'DC차데모',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontFamily: 'Pretendard-Regular',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      Expanded(
+        child: Container(
+          width: Get.size.width * 0.14,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: Get.size.width * 0.12,
+                height: Get.size.width * 0.12,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xff02845d),
+                    width: 1,
+                  ),
+                ),
+                child: SvgPicture.asset('assets/image/map/connect_type3.svg'),
+              ),
+              Text(
+                'AC상',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontFamily: 'Pretendard-Regular',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
     case "04":
       //DC콤보
-      return Container();
+       return Row(
+    children: [
+      SizedBox(
+        width: Get.size.width * 0.034,
+      ),
+      Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              v.output.toString(),
+              style: TextStyle(
+                color: Color(0xff131313),
+                fontFamily: 'Pretendard-Bold',
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              v.stat.toString(),
+              style: TextStyle(
+                color: Color(0xff02845d),
+                fontFamily: 'Pretendard-Medium',
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              '지하2층',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontFamily: 'Pretendard-Regular',
+              ),
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        child: Container(
+          width: Get.size.width * 0.14,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: Get.size.width * 0.12,
+                height: Get.size.width * 0.12,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xff02845d),
+                    width: 1,
+                  ),
+                ),
+                child: SvgPicture.asset('assets/image/map/connect_type1.svg'),
+              ),
+              Text(
+                'DC콤보',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontFamily: 'Pretendard-Regular',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
     case "05":
       //DC차데모 + DC콤보
-      return Container();
+       return Row(
+    children: [
+      SizedBox(
+        width: Get.size.width * 0.034,
+      ),
+      Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              v.output.toString(),
+              style: TextStyle(
+                color: Color(0xff131313),
+                fontFamily: 'Pretendard-Bold',
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              v.stat.toString(),
+              style: TextStyle(
+                color: Color(0xff02845d),
+                fontFamily: 'Pretendard-Medium',
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              '지하2층',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontFamily: 'Pretendard-Regular',
+              ),
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        child: Container(
+          width: Get.size.width * 0.14,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: Get.size.width * 0.12,
+                height: Get.size.width * 0.12,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xff02845d),
+                    width: 1,
+                  ),
+                ),
+                child: SvgPicture.asset('assets/image/map/connect_type2.svg'),
+              ),
+              Text(
+                'DC차데모',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontFamily: 'Pretendard-Regular',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      Expanded(
+        child: Container(
+          width: Get.size.width * 0.14,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: Get.size.width * 0.12,
+                height: Get.size.width * 0.12,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xff02845d),
+                    width: 1,
+                  ),
+                ),
+                child: SvgPicture.asset('assets/image/map/connect_type1.svg'),
+              ),
+              Text(
+                'DC콤보',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontFamily: 'Pretendard-Regular',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
     case "06":
-      //DC차데모 + AC상++ DC콤보
-      return Container();
+      //DC차데모 + AC상+ DC콤보
+      return Row(
+    children: [
+      SizedBox(
+        width: Get.size.width * 0.034,
+      ),
+      Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              v.output.toString(),
+              style: TextStyle(
+                color: Color(0xff131313),
+                fontFamily: 'Pretendard-Bold',
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              v.stat.toString(),
+              style: TextStyle(
+                color: Color(0xff02845d),
+                fontFamily: 'Pretendard-Medium',
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              '지하2층',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontFamily: 'Pretendard-Regular',
+              ),
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        child: Container(
+          width: Get.size.width * 0.14,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: Get.size.width * 0.12,
+                height: Get.size.width * 0.12,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xff02845d),
+                    width: 1,
+                  ),
+                ),
+                child: SvgPicture.asset('assets/image/map/connect_type2.svg'),
+              ),
+              Text(
+                'DC차데모',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontFamily: 'Pretendard-Regular',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      Expanded(
+        child: Container(
+          width: Get.size.width * 0.14,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: Get.size.width * 0.12,
+                height: Get.size.width * 0.12,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xff02845d),
+                    width: 1,
+                  ),
+                ),
+                child: SvgPicture.asset('assets/image/map/connect_type3.svg'),
+              ),
+              Text(
+                'AC상',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontFamily: 'Pretendard-Regular',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      // SizedBox(
+      //   width: Get.size.width * 0.074,
+      // ),
+      Expanded(
+        child: Container(
+          width: Get.size.width * 0.14,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: Get.size.width * 0.12,
+                height: Get.size.width * 0.12,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xff02845d),
+                    width: 1,
+                  ),
+                ),
+                child: SvgPicture.asset('assets/image/map/connect_type1.svg'),
+              ),
+              Text(
+                'DC콤보',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontFamily: 'Pretendard-Regular',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
     default:
       //알수없는 버전
       return Container(
         child: Center(child: Text('알수없는 타입입니다. \n관리자에게 연락주세요.')),
       );
   }
-  // return Row(
-  //   children: [
-  //     SizedBox(
-  //       width: Get.size.width * 0.034,
-  //     ),
-  //     Container(
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: [
-  //           Text(value.chgerType.toString()),
-  //           Text(
-  //             '급속 1',
-  //             style: TextStyle(
-  //               color: Color(0xff131313),
-  //               fontFamily: 'Pretendard-Bold',
-  //               fontWeight: FontWeight.w700,
-  //               fontSize: 14,
-  //             ),
-  //           ),
-  //           Text(
-  //             '충전가능',
-  //             style: TextStyle(
-  //               color: Color(0xff02845d),
-  //               fontFamily: 'Pretendard-Medium',
-  //               fontWeight: FontWeight.w500,
-  //               fontSize: 14,
-  //             ),
-  //           ),
-  //           Text(
-  //             '지하2층',
-  //             style: TextStyle(
-  //               color: Colors.black,
-  //               fontSize: 12,
-  //               fontFamily: 'Pretendard-Regular',
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //     SizedBox(
-  //       width: Get.size.width * 0.10,
-  //     ),
-  //     Container(
-  //       width: Get.size.width * 0.14,
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: [
-  //           Container(
-  //             width: Get.size.width * 0.12,
-  //             height: Get.size.width * 0.12,
-  //             decoration: BoxDecoration(
-  //               border: Border.all(
-  //                 color: Color(0xff02845d),
-  //                 width: 1,
-  //               ),
-  //             ),
-  //             child: SvgPicture.asset('assets/image/map/connect_type1.svg'),
-  //           ),
-  //           Text(
-  //             'DC콤보',
-  //             style: TextStyle(
-  //               color: Colors.black,
-  //               fontSize: 12,
-  //               fontFamily: 'Pretendard-Regular',
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //     SizedBox(
-  //       width: Get.size.width * 0.074,
-  //     ),
-  //     Container(
-  //       width: Get.size.width * 0.14,
-  //       child: Column(
-  //         children: [
-  //           SvgPicture.asset('assets/image/map/connect_type1.svg'),
-  //           Text(
-  //             'DC콤보',
-  //             style: TextStyle(
-  //               color: Colors.black,
-  //               fontSize: 12,
-  //               fontFamily: 'Pretendard-Regular',
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //     SizedBox(
-  //       width: Get.size.width * 0.074,
-  //     ),
-  //     Container(
-  //       width: Get.size.width * 0.14,
-  //       child: Column(
-  //         children: [
-  //           SvgPicture.asset('assets/image/map/connect_type1.svg'),
-  //           Text(
-  //             'DC콤보',
-  //             style: TextStyle(
-  //               color: Colors.black,
-  //               fontSize: 12,
-  //               fontFamily: 'Pretendard-Regular',
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     )
-  //   ],
-  // );
+  
 }

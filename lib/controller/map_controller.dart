@@ -121,8 +121,9 @@ class Mapcontroller extends GetxController {
         //추가
 
         tempstation.forEach((e) async {
-          switch (0) {
-            case 0:
+          // switch (e.count) {
+            switch ("0") {
+            case "0":
               await getBytesFromAsset('assets/image/map/0.png', 100).then(
                   (value) => evMarker.add(Marker(
                       markerId: MarkerId(e.statId.toString()),
@@ -130,7 +131,7 @@ class Mapcontroller extends GetxController {
                       icon: BitmapDescriptor.fromBytes(value),
                       onTap: () => markertap(e))));
               break;
-            case 1:
+            case "1":
               await getBytesFromAsset('assets/image/map/1.png', 100).then(
                   (value) => evMarker.add(Marker(
                       markerId: MarkerId(e.statId.toString()),
@@ -138,7 +139,7 @@ class Mapcontroller extends GetxController {
                       icon: BitmapDescriptor.fromBytes(value),
                       onTap: () => markertap(e))));
               break;
-            case 2:
+            case "2":
               await getBytesFromAsset('assets/image/map/2.png', 100).then(
                   (value) => evMarker.add(Marker(
                       markerId: MarkerId(e.statId.toString()),
@@ -146,7 +147,7 @@ class Mapcontroller extends GetxController {
                       icon: BitmapDescriptor.fromBytes(value),
                       onTap: () => markertap(e))));
               break;
-            case 3:
+            case "3":
               await getBytesFromAsset('assets/image/map/3.png', 100).then(
                   (value) => evMarker.add(Marker(
                       markerId: MarkerId(e.statId.toString()),
@@ -154,7 +155,7 @@ class Mapcontroller extends GetxController {
                       icon: BitmapDescriptor.fromBytes(value),
                       onTap: () => markertap(e))));
               break;
-            case 4:
+            case "4":
               await getBytesFromAsset('assets/image/map/4.png', 100).then(
                   (value) => evMarker.add(Marker(
                       markerId: MarkerId(e.statId.toString()),
@@ -162,7 +163,7 @@ class Mapcontroller extends GetxController {
                       icon: BitmapDescriptor.fromBytes(value),
                       onTap: () => markertap(e))));
               break;
-            case 5:
+            case "5":
               await getBytesFromAsset('assets/image/map/5.png', 100).then(
                   (value) => evMarker.add(Marker(
                       markerId: MarkerId(e.statId.toString()),
@@ -170,7 +171,7 @@ class Mapcontroller extends GetxController {
                       icon: BitmapDescriptor.fromBytes(value),
                       onTap: () => markertap(e))));
               break;
-            case 6:
+            case "6":
               await getBytesFromAsset('assets/image/map/6.png', 100).then(
                   (value) => evMarker.add(Marker(
                       markerId: MarkerId(e.statId.toString()),
@@ -178,7 +179,7 @@ class Mapcontroller extends GetxController {
                       icon: BitmapDescriptor.fromBytes(value),
                       onTap: () => markertap(e))));
               break;
-            case 7:
+            case "7":
               await getBytesFromAsset('assets/image/map/7.png', 100).then(
                   (value) => evMarker.add(Marker(
                       markerId: MarkerId(e.statId.toString()),
@@ -186,7 +187,7 @@ class Mapcontroller extends GetxController {
                       icon: BitmapDescriptor.fromBytes(value),
                       onTap: () => markertap(e))));
               break;
-            case 8:
+            case "8":
               await getBytesFromAsset('assets/image/map/8.png', 100).then(
                   (value) => evMarker.add(Marker(
                       markerId: MarkerId(e.statId.toString()),
@@ -194,7 +195,7 @@ class Mapcontroller extends GetxController {
                       icon: BitmapDescriptor.fromBytes(value),
                       onTap: () => markertap(e))));
               break;
-            case 9:
+            case "9":
               await getBytesFromAsset('assets/image/map/9.png', 100).then(
                   (value) => evMarker.add(Marker(
                       markerId: MarkerId(e.statId.toString()),
@@ -202,7 +203,7 @@ class Mapcontroller extends GetxController {
                       icon: BitmapDescriptor.fromBytes(value),
                       onTap: () => markertap(e))));
               break;
-            case 10:
+            case "10":
               await getBytesFromAsset('assets/image/map/10.png', 100).then(
                   (value) => evMarker.add(Marker(
                       markerId: MarkerId(e.statId.toString()),
@@ -226,6 +227,8 @@ class Mapcontroller extends GetxController {
 
   //마커 초기 셋팅
   setMarker() {
+    //백단 count변수가 추가되면 주석풀고 셋팅하기
+    //마커 숫자이미지 적용
     // stationinfo.forEach((e) async {
     //   switch (e.count) {
     //     case 0:
@@ -332,6 +335,7 @@ class Mapcontroller extends GetxController {
     markerset();
     evstationinfo.clear();
     var response = await dio.get('/station/${e.statId}');
+    print('::::::::::::::::::::::::::::::::::::::::::::::::::${response.data.toString()}');
     if (response.statusCode == 200) {
       evstationinfo = (response.data['data']).map<Evstationinfo>((json) {
         return Evstationinfo.fromJson(json);

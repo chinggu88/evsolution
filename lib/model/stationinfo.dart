@@ -23,6 +23,7 @@ class Stationinfo {
   String? useTime;
   String? zcode;
 
+
   Stationinfo(
       {this.addr,
       this.busiCall,

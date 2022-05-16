@@ -23,9 +23,11 @@ enum naviWidgetName { savesearch, resultsearch, getresult, evstationlist }
 class Navicontroller extends GetxController {
   static Navicontroller get to => Get.find();
   var dio = Dio(BaseOptions(baseUrl: Statecontroller.to.serverUrl.value));
-
+  //시작주소
   TextEditingController startcontroller = new TextEditingController();
+  //도착주소
   TextEditingController endcontroller = new TextEditingController();
+  //시트컨트롤
   SheetController sc = SheetController();
 
   final currentPostion = LatLng(0.0, 0.0).obs;
@@ -42,9 +44,11 @@ class Navicontroller extends GetxController {
   List<Stationinfo> stationinfo = <Stationinfo>[].obs;
   //경로상 충전기 탭 번호+
   RxInt tap_num = (-1).obs;
-  final storage = new FlutterSecureStorage();
 
+  final storage = new FlutterSecureStorage();
+  //출발지 검색 리스트
   RxList<String> searchliststart = <String>[].obs;
+  //도착지 검색 리스트
   RxList<String> searchlistend = <String>[].obs;
 
   void oninit() async {
